@@ -1,0 +1,28 @@
+license {
+    header = file('LICENSE.txt')
+    include '**/*.java'
+
+    ignoreFailures = false
+    strictCheck = true
+
+    mapping {
+        java = 'SLASHSTAR_STYLE'
+    }
+}
+
+jar {
+    classifier = 'dev'
+}
+
+shadowJar {
+    classifier = ''
+
+    dependencies {
+        include(project("${gradle.guardianApiName}"))
+    }
+}
+
+artifacts {
+    archives jar
+    archives shadowJar
+}

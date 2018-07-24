@@ -1,0 +1,37 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.14.0"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'maven'
+    id 'idea'
+    id 'eclipse'
+    id 'com.github.johnrengelman.shadow' version '2.0.0'
+}
+
+apply from: project("$gradle.guardianApiName").file("gradle/versions.gradle")
+
+defaultTasks 'licenseFormat', 'build'
+
+group = "com.ichorpowered.guardian"
+
+apply from: project("$gradle.guardianApiName").file("gradle/shared.gradle")
+
+dependencies {
+    compile project("$gradle.guardianApiName")
+}
+
+apply from: project.file("gradle/common.gradle")
+apply from: project.file("gradle/publish.gradle")
+
+build.dependsOn(shadowJar)
+build.dependsOn(sourceJar)
+build.dependsOn(jar)
