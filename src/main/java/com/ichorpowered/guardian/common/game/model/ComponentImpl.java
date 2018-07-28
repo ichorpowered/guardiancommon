@@ -32,8 +32,8 @@ import com.ichorpowered.guardian.api.game.model.Model;
 import com.ichorpowered.guardian.api.game.model.ModelFactories;
 import com.ichorpowered.guardian.api.game.model.component.Component;
 import com.ichorpowered.guardian.api.game.model.value.Value;
-import com.ichorpowered.guardian.api.game.model.value.key.ValueKey;
-import com.ichorpowered.guardian.api.game.model.value.key.ValueKeyRegistry;
+import com.ichorpowered.guardian.api.game.model.value.key.Key;
+import com.ichorpowered.guardian.api.game.model.value.key.KeyRegistry;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
@@ -43,33 +43,28 @@ import java.util.Optional;
 public class ComponentImpl implements Component {
 
     private final ModelFactories modelFactories;
-    private final ValueKeyRegistry valueKeyRegistry;
+    private final KeyRegistry keyRegistry;
 
-    private final String key;
+    private final String id;
     private final Model model;
     private final List<String> defaultKeys = Lists.newArrayList();
-    private final Map<ValueKey<?>, Value<?>> valueContainer = Maps.newHashMap();
+    private final Map<Key<?>, Value<?>> valueContainer = Maps.newHashMap();
 
     @Inject
     public ComponentImpl(final ModelFactories modelFactories,
-                         final ValueKeyRegistry valueKeyRegistry,
-                         final @Assisted String key,
-                         final @Assisted Model model,
-                         final @Assisted List<String> defaultValues) {
+                         final KeyRegistry keyRegistry,
+                         final @Assisted String id,
+                         final @Assisted Model model) {
         this.modelFactories = modelFactories;
-        this.valueKeyRegistry = valueKeyRegistry;
-        this.key = key;
+        this.keyRegistry = keyRegistry;
+
+        this.id = id;
         this.model = model;
-
-        defaultKeys.forEach(defaultKey -> this.modelFactories.createValue(this, this.valueKeyRegistry.get(defaultKey)).map(value ->
-                this.valueContainer.put(this.valueKeyRegistry.get(defaultKey), value)));
-
-        this.defaultKeys.addAll(defaultValues);
     }
 
     @Override
-    public @NonNull String getKey() {
-        return this.key;
+    public @NonNull String getId() {
+        return this.id;
     }
 
     @Override
@@ -79,23 +74,24 @@ public class ComponentImpl implements Component {
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull <E> Optional<Value<E>> getValue(@NonNull ValueKey<E> valueKey) {
-        return Optional.ofNullable((Value<E>) this.valueContainer.get(valueKey));
+    public @NonNull <E> Optional<Value<E>> get(@NonNull Key<E> key) {
+        if (!this.valueContainer.containsKey(key)) return this.modelFactories.createValue(this, key).map(value -> (Value<E>) this.valueContainer.put(key, value));
+        return Optional.ofNullable((Value<E>) this.valueContainer.get(key));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull <E> Optional<Value<E>> setValue(@NonNull ValueKey<E> valueKey, E element) {
-        final Value<E> value = (Value<E>) this.valueContainer.get(valueKey);
-        if (!this.valueContainer.containsKey(valueKey)) return Optional.empty();
+    public @NonNull <E> Optional<Value<E>> set(@NonNull Key<E> key, E element) {
+        if (!this.valueContainer.containsKey(key)) return this.modelFactories.createValue(this, key, element).map(value -> (Value<E>) this.valueContainer.put(key, value));
+        final Value<E> value = (Value<E>) this.valueContainer.get(key);
 
         return Optional.of(value.set(element));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull <E> Optional<Value<E>> removeValue(@NonNull ValueKey<E> valueKey) {
-        return Optional.ofNullable((Value<E>) this.valueContainer.remove(valueKey));
+    public @NonNull <E> Optional<Value<E>> remove(@NonNull Key<E> key) {
+        return Optional.ofNullable((Value<E>) this.valueContainer.remove(key));
     }
 
     @Override
@@ -104,7 +100,7 @@ public class ComponentImpl implements Component {
     }
 
     @Override
-    public @NonNull ImmutableList<ValueKey<?>> keys() {
+    public @NonNull ImmutableList<Key<?>> keys() {
         return ImmutableList.copyOf(this.valueContainer.keySet());
     }
 

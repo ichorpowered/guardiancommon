@@ -26,22 +26,22 @@ package com.ichorpowered.guardian.common.game.model.value.key;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.ichorpowered.guardian.api.game.model.value.key.ValueKey;
-import com.ichorpowered.guardian.api.game.model.value.store.ValueStores;
+import com.ichorpowered.guardian.api.game.model.value.key.Key;
+import com.ichorpowered.guardian.api.game.model.value.store.Stores;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class ValueKeyImpl<E> implements ValueKey<E> {
+public class KeyImpl<E> implements Key<E> {
 
     private final String key;
     private final TypeToken<E> elementType;
     private final TypeToken<?> attributeType;
-    private final ValueStores storeType;
+    private final Stores storeType;
 
     @Inject
-    public ValueKeyImpl(final @Assisted String key,
-                        final @Assisted("elementType") TypeToken<?> elementType,
-                        final @Assisted("attributeType") TypeToken<?> attributeType,
-                        final @Assisted ValueStores storeType) {
+    public KeyImpl(final @Assisted String key,
+                   final @Assisted("elementType") TypeToken<?> elementType,
+                   final @Assisted("attributeType") TypeToken<?> attributeType,
+                   final @Assisted Stores storeType) {
         this.key = key;
         this.elementType = (TypeToken<E>) elementType;
         this.attributeType = attributeType;
@@ -64,7 +64,7 @@ public class ValueKeyImpl<E> implements ValueKey<E> {
     }
 
     @Override
-    public @NonNull ValueStores getValueStore() {
+    public @NonNull Stores getValueStore() {
         return this.storeType;
     }
 

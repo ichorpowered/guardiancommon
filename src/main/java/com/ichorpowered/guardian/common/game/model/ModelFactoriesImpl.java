@@ -24,12 +24,14 @@
 package com.ichorpowered.guardian.common.game.model;
 
 import com.google.inject.Inject;
+import com.ichorpowered.guardian.api.Guardian;
 import com.ichorpowered.guardian.api.game.model.ModelFactories;
 import com.ichorpowered.guardian.api.game.model.component.Component;
 import com.ichorpowered.guardian.api.game.model.value.Value;
-import com.ichorpowered.guardian.api.game.model.value.key.ValueKey;
-import com.ichorpowered.guardian.api.game.model.value.store.ValueStores;
+import com.ichorpowered.guardian.api.game.model.value.key.Key;
+import com.ichorpowered.guardian.api.game.model.value.store.Stores;
 import com.ichorpowered.guardian.common.game.model.value.ValueImpl;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Optional;
@@ -40,13 +42,33 @@ public final class ModelFactoriesImpl implements ModelFactories {
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull <E> Optional<Value<E>> createValue(@NonNull Component component, @NonNull ValueKey<E> valueKey) {
-        E element = null;
-        if (valueKey.getValueStore().equals(ValueStores.PHYSICAL)) {
-            element = component.getModel().getModelConfiguration().getData(component.getModel().getGameReference(), valueKey).orElse(null);
+    public @NonNull <E> Optional<Value<E>> createValue(@NonNull Component component, @NonNull Key<E> key) {
+        if (key.getValueStore().equals(Stores.PHYSICAL)) {
+            E value = null;
+
+            try {
+                value = Guardian.getGlobalConfiguration().getModel(component.getModel().getId()).getNode("data", component.getId(), key.getKey()).getValue(key.getElementType());
+            } catch (ObjectMappingException e) {
+                e.printStackTrace();
+            }
+
+            return value == null ? Optional.empty() : Optional.of((Value<E>) this.valueFactory.create(key, value));
         }
 
-        return Optional.of((Value<E>) this.valueFactory.create(valueKey, element));
+        return Optional.empty();
+    }
+
+    @Override
+    public @NonNull <E> Optional<Value<E>> createValue(@NonNull Component component, @NonNull Key<E> key, @NonNull E element) {
+        if (key.getValueStore().equals(Stores.PHYSICAL)) {
+            return this.createValue(component, key).map(value -> value.set(element));
+        }
+
+        if (key.getValueStore().equals(Stores.VIRTUAL)) {
+            return Optional.of((Value<E>) this.valueFactory.create(key, element));
+        }
+
+        return Optional.empty();
     }
 
 }

@@ -25,6 +25,7 @@ package com.ichorpowered.guardian.common.game.model;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.ichorpowered.guardian.api.Guardian;
 import com.ichorpowered.guardian.api.game.GameReference;
@@ -32,6 +33,7 @@ import com.ichorpowered.guardian.api.game.model.Model;
 import com.ichorpowered.guardian.api.game.model.ModelFactories;
 import com.ichorpowered.guardian.api.game.model.ModelRegistry;
 import com.ichorpowered.guardian.api.game.model.component.Component;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
@@ -54,7 +56,12 @@ public final class ModelRegistryImpl implements ModelRegistry {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Model> @NonNull T create(final String id, final GameReference<?> gameReference, final List<String> defaultComponents) {
-        final List<String> components = Guardian.getDefinitionConfiguration().getComponents(id);
+        final List<String> components = Lists.newArrayList();
+        try {
+            components.addAll(Guardian.getGlobalConfiguration().getModel(id).getNode("components").getList(TypeToken.of(String.class)));
+        } catch (ObjectMappingException e) {
+            e.printStackTrace();
+        }
 
         defaultComponents.addAll(components);
 
@@ -82,11 +89,11 @@ public final class ModelRegistryImpl implements ModelRegistry {
         T newModel = this.create(id, gameReference,
                 otherFrame.getDefaultComponents()
                         .stream()
-                        .map(Component::getKey)
+                        .map(Component::getId)
                         .collect(Collectors.toList())
         );
 
-        otherFrame.getComponents().forEach(component -> newModel.cloneComponent(component.getKey(), component));
+        otherFrame.getComponents().forEach(component -> newModel.cloneComponent(id, component));
 
         return newModel;
     }

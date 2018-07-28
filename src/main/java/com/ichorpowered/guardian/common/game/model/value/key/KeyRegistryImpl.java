@@ -24,25 +24,35 @@
 package com.ichorpowered.guardian.common.game.model.value.key;
 
 import com.google.common.collect.Maps;
-import com.ichorpowered.guardian.api.game.model.value.key.ValueKey;
-import com.ichorpowered.guardian.api.game.model.value.key.ValueKeyRegistry;
+import com.google.common.reflect.TypeToken;
+import com.ichorpowered.guardian.api.game.model.value.key.Key;
+import com.ichorpowered.guardian.api.game.model.value.key.KeyRegistry;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Map;
+import java.util.Optional;
 
-public class ValueKeyRegistryImpl implements ValueKeyRegistry {
+public class KeyRegistryImpl implements KeyRegistry {
 
-    private final Map<String, ValueKey<?>> valueKeys = Maps.newHashMap();
+    private final Map<String, Key<?>> valueKeys = Maps.newHashMap();
 
     @Override
-    public @NonNull ValueKey<?> set(@NonNull String key, @NonNull ValueKey<?> valueKey) {
-        this.valueKeys.put(key, valueKey);
-        return valueKey;
+    public @NonNull Optional<Key<?>> get(@NonNull String key) {
+        return Optional.ofNullable(this.valueKeys.get(key));
     }
 
     @Override
-    public @NonNull ValueKey<?> get(@NonNull String key) {
-        return this.valueKeys.get(key);
+    public @NonNull <E> Optional<Key<E>> get(@NonNull String id, @NonNull TypeToken<E> typeToken) {
+        final Key<?> key = this.valueKeys.get(id);
+
+        if (!key.getElementType().equals(typeToken)) return Optional.empty();
+        return Optional.ofNullable((Key<E>) key);
+    }
+
+    @Override
+    public @NonNull KeyRegistry register(@NonNull Key<?> key) {
+        this.valueKeys.put(key.getKey(), key);
+        return this;
     }
 
 }

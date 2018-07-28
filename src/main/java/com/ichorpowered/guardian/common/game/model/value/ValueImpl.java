@@ -27,7 +27,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.ichorpowered.guardian.api.game.model.ModelFactories;
 import com.ichorpowered.guardian.api.game.model.value.Value;
-import com.ichorpowered.guardian.api.game.model.value.key.ValueKey;
+import com.ichorpowered.guardian.api.game.model.value.key.Key;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Optional;
@@ -36,23 +36,23 @@ import java.util.function.Function;
 public class ValueImpl<E> implements Value<E> {
 
     private final ModelFactories modelFactories;
-    private final ValueKey<E> valueKey;
+    private final Key<E> key;
     private final E defaultElement;
 
     private E element;
 
     @Inject
     private ValueImpl(final ModelFactories modelFactories,
-                      final @Assisted("key") ValueKey<?> valueKey,
+                      final @Assisted("key") Key<?> key,
                       final @Assisted("defaultElement") Object defaultElement) {
         this.modelFactories = modelFactories;
-        this.valueKey = (ValueKey<E>) valueKey;
+        this.key = (Key<E>) key;
         this.defaultElement = (E) defaultElement;
     }
 
     @Override
-    public @NonNull ValueKey<E> getKey() {
-        return this.valueKey;
+    public @NonNull Key<E> getKey() {
+        return this.key;
     }
 
     @Override
