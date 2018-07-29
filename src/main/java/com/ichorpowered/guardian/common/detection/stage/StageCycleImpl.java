@@ -72,6 +72,14 @@ public class StageCycleImpl implements StageCycle {
     }
 
     @Override
+    public int sizeFor(@NonNull Class<? extends Stage<?>> stage) {
+        return (int) this.stages.stream()
+                .filter(originalStage -> originalStage.getClass().equals(stage))
+                .flatMap(originalStage -> originalStage.getProcesses())
+                .count();
+    }
+
+    @Override
     public @NonNull int totalSize() {
         return this.stages.size();
     }
