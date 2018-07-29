@@ -25,7 +25,7 @@ package com.ichorpowered.guardian.common.detection.stage.type;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
-import com.ichorpowered.guardian.api.detection.stage.process.Check;
+import com.ichorpowered.guardian.api.detection.stage.process.Heuristic;
 import com.ichorpowered.guardian.api.detection.stage.Stage;
 import com.ichorpowered.guardian.api.detection.stage.StageProcess;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -35,20 +35,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class CheckStageImpl implements Stage<Check<?>> {
+public class HeuristicStageImpl implements Stage<Heuristic> {
 
-    private final Map<Class<? extends Check<?>>, Check<?>> processes = Maps.newHashMap();
+    private final Map<Class<? extends Heuristic>, Heuristic> processes = Maps.newHashMap();
     private final int maximum;
 
     @Inject
-    public CheckStageImpl(final List<StageProcess> processes,
-                          final int maximum) {
-        processes.forEach(stageProcess -> this.processes.put((Class<Check<?>>) stageProcess.getClass(), (Check<?>) stageProcess));
+    public HeuristicStageImpl(final List<StageProcess> processes,
+                              final int maximum) {
+        processes.forEach(stageProcess -> this.processes.put((Class<Heuristic>) stageProcess.getClass(), (Heuristic) stageProcess));
         this.maximum = maximum;
     }
 
     @Override
-    public @NonNull Optional<Check<?>> getProcess(@NonNull Class<? extends Check<?>> stageProcessType) {
+    public @NonNull Optional<Heuristic> getProcess(@NonNull Class<? extends Heuristic> stageProcessType) {
         return Optional.ofNullable(this.processes.get(stageProcessType));
     }
 
@@ -63,7 +63,7 @@ public class CheckStageImpl implements Stage<Check<?>> {
     }
 
     @Override
-    public @NonNull Iterator<Check<?>> iterator() {
+    public Iterator<Heuristic> iterator() {
         return this.processes.values().iterator();
     }
 

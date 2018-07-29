@@ -25,9 +25,9 @@ package com.ichorpowered.guardian.common.detection.stage.type;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
-import com.ichorpowered.guardian.api.detection.stage.process.Check;
 import com.ichorpowered.guardian.api.detection.stage.Stage;
 import com.ichorpowered.guardian.api.detection.stage.StageProcess;
+import com.ichorpowered.guardian.api.detection.stage.process.Penalty;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Iterator;
@@ -35,20 +35,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class CheckStageImpl implements Stage<Check<?>> {
+public class PenaltyStageImpl implements Stage<Penalty> {
 
-    private final Map<Class<? extends Check<?>>, Check<?>> processes = Maps.newHashMap();
+    private final Map<Class<? extends Penalty>, Penalty> processes = Maps.newHashMap();
     private final int maximum;
 
     @Inject
-    public CheckStageImpl(final List<StageProcess> processes,
-                          final int maximum) {
-        processes.forEach(stageProcess -> this.processes.put((Class<Check<?>>) stageProcess.getClass(), (Check<?>) stageProcess));
+    public PenaltyStageImpl(final List<StageProcess> processes,
+                              final int maximum) {
+        processes.forEach(stageProcess -> this.processes.put((Class<Penalty>) stageProcess.getClass(), (Penalty) stageProcess));
         this.maximum = maximum;
     }
 
     @Override
-    public @NonNull Optional<Check<?>> getProcess(@NonNull Class<? extends Check<?>> stageProcessType) {
+    public @NonNull Optional<Penalty> getProcess(@NonNull Class<? extends Penalty> stageProcessType) {
         return Optional.ofNullable(this.processes.get(stageProcessType));
     }
 
@@ -63,8 +63,7 @@ public class CheckStageImpl implements Stage<Check<?>> {
     }
 
     @Override
-    public @NonNull Iterator<Check<?>> iterator() {
+    public Iterator<Penalty> iterator() {
         return this.processes.values().iterator();
     }
-
 }
