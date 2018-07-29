@@ -30,6 +30,7 @@ import com.ichorpowered.guardian.api.detection.DetectionBuilder;
 import com.ichorpowered.guardian.api.detection.DetectionController;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 
@@ -61,6 +62,11 @@ public class DetectionControllerImpl implements DetectionController {
 
     void setDetection(@NonNull Detection detection) {
         this.detectionContainer.put(detection.getId(), detection);
+    }
+
+    @Override
+    public Iterator<Detection> iterator() {
+        return this.detectionContainer.values().iterator();
     }
 
 }
