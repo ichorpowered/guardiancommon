@@ -43,7 +43,7 @@ public class ValueImpl<E> implements Value<E> {
 
     @Inject
     private ValueImpl(final ModelFactories modelFactories,
-                      final @Assisted("key") Key<?> key,
+                      final @Assisted("key") Key key,
                       final @Assisted("defaultElement") Object defaultElement) {
         this.modelFactories = modelFactories;
         this.key = (Key<E>) key;
