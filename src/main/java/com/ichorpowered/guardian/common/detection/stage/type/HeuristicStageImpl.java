@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class HeuristicStageImpl implements Stage<Heuristic> {
 
@@ -50,6 +51,11 @@ public class HeuristicStageImpl implements Stage<Heuristic> {
     @Override
     public @NonNull Optional<Heuristic> getProcess(@NonNull Class<? extends Heuristic> stageProcessType) {
         return Optional.ofNullable(this.processes.get(stageProcessType));
+    }
+
+    @Override
+    public @NonNull Stream<Heuristic> getProcesses() {
+        return this.processes.values().stream();
     }
 
     @Override

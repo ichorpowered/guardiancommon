@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class PenaltyStageImpl implements Stage<Penalty> {
 
@@ -50,6 +51,11 @@ public class PenaltyStageImpl implements Stage<Penalty> {
     @Override
     public @NonNull Optional<Penalty> getProcess(@NonNull Class<? extends Penalty> stageProcessType) {
         return Optional.ofNullable(this.processes.get(stageProcessType));
+    }
+
+    @Override
+    public @NonNull Stream<Penalty> getProcesses() {
+        return this.processes.values().stream();
     }
 
     @Override

@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class CheckStageImpl implements Stage<Check<?>> {
 
@@ -50,6 +51,11 @@ public class CheckStageImpl implements Stage<Check<?>> {
     @Override
     public @NonNull Optional<Check<?>> getProcess(@NonNull Class<? extends Check<?>> stageProcessType) {
         return Optional.ofNullable(this.processes.get(stageProcessType));
+    }
+
+    @Override
+    public @NonNull Stream<Check<?>> getProcesses() {
+        return this.processes.values().stream();
     }
 
     @Override

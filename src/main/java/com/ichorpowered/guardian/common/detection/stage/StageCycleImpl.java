@@ -33,6 +33,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class StageCycleImpl implements StageCycle {
 
@@ -126,6 +127,14 @@ public class StageCycleImpl implements StageCycle {
         }
 
         return false;
+    }
+
+    @Override
+    public @NonNull <T extends StageProcess> List<T> getFor(@NonNull Class<? extends Stage<T>> stage) {
+        return (List<T>) this.stages.stream()
+                .filter(originalStage -> originalStage.getClass().equals(stage))
+                .flatMap(originalStage -> originalStage.getProcesses())
+                .collect(Collectors.toList());
     }
 
 }
