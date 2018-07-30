@@ -25,6 +25,7 @@ package com.ichorpowered.guardian.common.game.model.value.key;
 
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
+import com.google.inject.Singleton;
 import com.ichorpowered.guardian.api.game.model.value.key.Key;
 import com.ichorpowered.guardian.api.game.model.value.key.KeyRegistry;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -32,6 +33,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import java.util.Map;
 import java.util.Optional;
 
+@Singleton
 public class KeyRegistryImpl implements KeyRegistry {
 
     private final Map<String, Key<?>> valueKeys = Maps.newHashMap();

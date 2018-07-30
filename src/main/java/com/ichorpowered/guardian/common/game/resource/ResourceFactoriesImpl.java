@@ -24,10 +24,12 @@
 package com.ichorpowered.guardian.common.game.resource;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.ichorpowered.guardian.api.game.resource.PlayerResource;
 import com.ichorpowered.guardian.api.game.resource.ResourceFactories;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+@Singleton
 public final class ResourceFactoriesImpl implements ResourceFactories {
 
     private final PlayerResource.Factory playerResourceFactory;

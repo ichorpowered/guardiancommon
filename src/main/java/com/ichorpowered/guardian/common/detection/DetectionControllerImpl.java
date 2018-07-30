@@ -25,6 +25,7 @@ package com.ichorpowered.guardian.common.detection;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.ichorpowered.guardian.api.detection.Detection;
 import com.ichorpowered.guardian.api.detection.DetectionBuilder;
 import com.ichorpowered.guardian.api.detection.DetectionController;
@@ -34,6 +35,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 
+@Singleton
 public class DetectionControllerImpl implements DetectionController {
 
     private final DetectionBuilderImpl.Factory detectionBuilderFactory;

@@ -24,6 +24,7 @@
 package com.ichorpowered.guardian.common.game.model;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.ichorpowered.guardian.api.Guardian;
 import com.ichorpowered.guardian.api.game.model.ModelFactories;
 import com.ichorpowered.guardian.api.game.model.component.Component;
@@ -36,6 +37,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Optional;
 
+@Singleton
 public final class ModelFactoriesImpl implements ModelFactories {
 
     @Inject private ValueImpl.Factory valueFactory;

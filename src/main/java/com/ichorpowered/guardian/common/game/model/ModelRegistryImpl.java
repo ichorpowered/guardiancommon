@@ -27,6 +27,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.ichorpowered.guardian.api.Guardian;
 import com.ichorpowered.guardian.api.game.GameReference;
 import com.ichorpowered.guardian.api.game.model.Model;
@@ -41,11 +42,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Singleton
 public final class ModelRegistryImpl implements ModelRegistry {
 
-    private final Map<GameReference<?>, Model> modelContainer = Maps.newHashMap();
+    private final Map<String, Model> modelContainer = Maps.newHashMap();
 
-    @Inject private ModelFactories modelFactories;
     @Inject private Model.Factory modelFactory;
 
     @Override
@@ -66,7 +67,7 @@ public final class ModelRegistryImpl implements ModelRegistry {
         defaultComponents.addAll(components);
 
         final T model = (T) this.modelFactory.create(id, gameReference, components);
-        this.modelContainer.put(gameReference, model);
+        this.modelContainer.put(gameReference.getGameId(), model);
 
         return model;
     }
@@ -74,13 +75,13 @@ public final class ModelRegistryImpl implements ModelRegistry {
     @SuppressWarnings("unchecked")
     @Override
     public @NonNull <T extends Model> Optional<T> get(final GameReference<?> gameReference) {
-        return Optional.ofNullable((T) this.modelContainer.get(gameReference));
+        return Optional.ofNullable((T) this.modelContainer.get(gameReference.getGameId()));
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public @NonNull <T extends Model> Optional<T> remove(final GameReference<?> gameReference) {
-        return Optional.ofNullable((T) this.modelContainer.remove(gameReference));
+        return Optional.ofNullable((T) this.modelContainer.remove(gameReference.getGameId()));
     }
 
     @SuppressWarnings("unchecked")
