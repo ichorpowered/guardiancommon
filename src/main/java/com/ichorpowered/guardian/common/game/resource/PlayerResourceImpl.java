@@ -63,9 +63,9 @@ public class PlayerResourceImpl implements PlayerResource {
     public @NonNull PlayerResourceImpl add(GameReference<?> reference) {
         if (this.resourceContainer.get(this.groupIndex).size() >= this.maxGroupSize && this.groupIndex >= this.maxGroupSize * this.maxContainerSize) throw new StackOverflowError();
 
-        if (this.resourceContainer.get(this.groupIndex).size() < this.maxGroupSize) {
+        if (!this.resourceContainer.get(this.groupIndex).isEmpty() && this.resourceContainer.get(this.groupIndex).size() < this.maxGroupSize) {
             this.referenceContainer.put(reference.getGameId(), reference);
-            this.resourceContainer.get(++this.groupIndex).add(reference);
+            this.resourceContainer.get(this.groupIndex).add(reference);
         } else {
             this.referenceContainer.put(reference.getGameId(), reference);
             this.resourceContainer.put(++this.groupIndex, reference);
