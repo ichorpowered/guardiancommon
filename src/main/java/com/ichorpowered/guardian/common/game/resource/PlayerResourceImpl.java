@@ -25,6 +25,7 @@ package com.ichorpowered.guardian.common.game.resource;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -37,6 +38,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class PlayerResourceImpl implements PlayerResource {
 
@@ -46,6 +48,7 @@ public class PlayerResourceImpl implements PlayerResource {
 
     private int groupIndex = 0;
     private Multimap<Integer, GameReference<?>> resourceContainer = HashMultimap.create();
+    private Map<String, GameReference<?>> referenceContainer = Maps.newHashMap();
 
     @Inject
     public PlayerResourceImpl(final @Assisted("maxContainerSize") Integer maxContainerSize,
@@ -64,6 +67,7 @@ public class PlayerResourceImpl implements PlayerResource {
             this.resourceContainer.get(this.groupIndex).add(reference);
         } else {
             this.resourceContainer.put(++this.groupIndex, reference);
+            this.referenceContainer.put(reference.getGameId(), reference);
         }
 
         return this;
@@ -81,6 +85,8 @@ public class PlayerResourceImpl implements PlayerResource {
                 this.resourceContainer.putAll(++this.groupIndex, buffer);
                 buffer.clear();
             }
+
+            this.referenceContainer.put(reference.getGameId(), reference);
         }
 
         return this;
@@ -102,6 +108,11 @@ public class PlayerResourceImpl implements PlayerResource {
     }
 
     @Override
+    public @NonNull Optional<GameReference<?>> getReference(@NonNull String id) {
+        return Optional.ofNullable(this.referenceContainer.get(id));
+    }
+
+    @Override
     public @NonNull Collection<Map.Entry<Integer, GameReference<?>>> getAll() {
         return ImmutableList.copyOf(this.resourceContainer.entries());
     }
@@ -110,6 +121,7 @@ public class PlayerResourceImpl implements PlayerResource {
     public @NonNull Boolean remove(GameReference<?> reference) {
         for (Map.Entry<Integer, GameReference<?>> entry : this.resourceContainer.entries()) {
             if (!entry.getValue().equals(reference)) continue;
+            this.referenceContainer.remove(reference.getGameId());
             return this.resourceContainer.remove(entry.getKey(), entry.getValue());
         }
 
@@ -118,16 +130,20 @@ public class PlayerResourceImpl implements PlayerResource {
 
     @Override
     public @NonNull Boolean remove(GameReference<?> reference, int group) {
+        this.referenceContainer.remove(reference.getGameId());
         return this.resourceContainer.remove(group, reference);
     }
 
     @Override
     public @NonNull Collection<GameReference<?>> removeAll(int group) {
-        return this.resourceContainer.removeAll(group);
+        return this.resourceContainer.removeAll(group).stream()
+                .map(gameReference -> this.referenceContainer.remove(gameReference.getGameId()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public void clear() {
+        this.referenceContainer.clear();
         this.resourceContainer.clear();
     }
 
