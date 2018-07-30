@@ -68,7 +68,7 @@ public class PlayerResourceImpl implements PlayerResource {
             this.resourceContainer.get(this.groupIndex).add(reference);
         } else {
             this.referenceContainer.put(reference.getGameId(), reference);
-            this.resourceContainer.put(++this.groupIndex, reference);
+            this.resourceContainer.put(this.groupIndex++, reference);
         }
 
         return this;
@@ -83,7 +83,7 @@ public class PlayerResourceImpl implements PlayerResource {
             if (buffer.size() < this.maxGroupSize) {
                 buffer.set(buffer.size(), reference);
             } else {
-                this.resourceContainer.putAll(++this.groupIndex, buffer);
+                this.resourceContainer.putAll(this.groupIndex++, buffer);
                 buffer.clear();
             }
 
