@@ -65,7 +65,7 @@ public class PlayerResourceImpl implements PlayerResource {
 
         if (this.resourceContainer.get(this.groupIndex).size() < this.maxGroupSize) {
             this.referenceContainer.put(reference.getGameId(), reference);
-            this.resourceContainer.get(this.groupIndex).add(reference);
+            this.resourceContainer.get(++this.groupIndex).add(reference);
         } else {
             this.referenceContainer.put(reference.getGameId(), reference);
             this.resourceContainer.put(++this.groupIndex, reference);
