@@ -27,9 +27,13 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.ichorpowered.guardian.api.detection.Detection;
 import com.ichorpowered.guardian.api.detection.stage.StageCycle;
+import com.ichorpowered.guardian.api.storage.GlobalConfiguration;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class DetectionImpl implements Detection {
+
+    private final GlobalConfiguration globalConfiguration;
 
     private final String id;
     private final String name;
@@ -37,10 +41,12 @@ public class DetectionImpl implements Detection {
     private final Object plugin;
 
     @Inject
-    public DetectionImpl(final @Assisted("id") String id,
+    public DetectionImpl(final GlobalConfiguration globalConfiguration,
+                         final @Assisted("id") String id,
                          final @Assisted("name") String name,
                          final @Assisted StageCycle stageCycle,
                          final @Assisted Object plugin) {
+        this.globalConfiguration = globalConfiguration;
         this.id = id;
         this.name = name;
         this.stageCycle = stageCycle;
@@ -60,6 +66,11 @@ public class DetectionImpl implements Detection {
     @Override
     public @NonNull StageCycle getStageCycle() {
         return this.stageCycle;
+    }
+
+    @Override
+    public @NonNull CommentedConfigurationNode getConfiguration() {
+        return this.globalConfiguration.getDetection(this.id);
     }
 
     @Override
