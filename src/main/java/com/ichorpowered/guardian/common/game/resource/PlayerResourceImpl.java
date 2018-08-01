@@ -120,14 +120,17 @@ public class PlayerResourceImpl implements PlayerResource {
 
     @Override
     public @NonNull Boolean remove(GameReference<?> reference) {
+        boolean result = false;
+
         for (Map.Entry<Integer, GameReference<?>> entry : this.resourceContainer.entries()) {
             if (!entry.getValue().equals(reference)) continue;
-            return this.resourceContainer.remove(entry.getKey(), entry.getValue());
+            result = this.resourceContainer.remove(entry.getKey(), entry.getValue());
+            break;
         }
 
         this.referenceContainer.remove(reference.getGameId());
 
-        return false;
+        return result;
     }
 
     @Override
