@@ -100,12 +100,10 @@ public class PlayerResourceImpl implements PlayerResource {
 
     @Override
     public @NonNull Optional<Integer> get(GameReference<?> reference) {
-        for (Map.Entry<Integer, GameReference<?>> entry : this.resourceContainer.entries()) {
-            if (!entry.getValue().equals(reference)) continue;
-            return Optional.of(entry.getKey());
-        }
-
-        return Optional.empty();
+        return this.resourceContainer.entries().stream()
+                .filter(entry -> entry.getValue().equals(reference))
+                .map(Map.Entry::getKey)
+                .findFirst();
     }
 
     @Override
@@ -125,6 +123,7 @@ public class PlayerResourceImpl implements PlayerResource {
         for (Map.Entry<Integer, GameReference<?>> entry : this.resourceContainer.entries()) {
             if (!entry.getValue().equals(reference)) continue;
             result = this.resourceContainer.remove(entry.getKey(), entry.getValue());
+            if (this.resourceContainer.get(entry.getKey()).isEmpty()) this.groupIndex--;
             break;
         }
 
@@ -136,7 +135,9 @@ public class PlayerResourceImpl implements PlayerResource {
     @Override
     public @NonNull Boolean remove(GameReference<?> reference, int group) {
         this.referenceContainer.remove(reference.getGameId());
-        return this.resourceContainer.remove(group, reference);
+        boolean result = this.resourceContainer.remove(group, reference);
+        if (this.resourceContainer.get(group).isEmpty()) this.groupIndex--;
+        return result;
     }
 
     @Override
@@ -150,6 +151,7 @@ public class PlayerResourceImpl implements PlayerResource {
     public void clear() {
         this.referenceContainer.clear();
         this.resourceContainer.clear();
+        this.groupIndex = 0;
     }
 
     @Override
