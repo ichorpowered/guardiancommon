@@ -25,6 +25,7 @@ package com.ichorpowered.guardian.common.game.resource;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.ichorpowered.guardian.api.game.resource.PlayerGroupResource;
 import com.ichorpowered.guardian.api.game.resource.PlayerResource;
 import com.ichorpowered.guardian.api.game.resource.ResourceFactories;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -32,16 +33,24 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 @Singleton
 public final class ResourceFactoriesImpl implements ResourceFactories {
 
+    private final PlayerGroupResource.Factory playerGroupResourceFactory;
     private final PlayerResource.Factory playerResourceFactory;
 
     @Inject
-    public ResourceFactoriesImpl(final PlayerResource.Factory playerResourceFactory) {
+    public ResourceFactoriesImpl(final PlayerGroupResource.Factory playerGroupResourceFactory,
+                                 final PlayerResource.Factory playerResourceFactory) {
+        this.playerGroupResourceFactory = playerGroupResourceFactory;
         this.playerResourceFactory = playerResourceFactory;
     }
 
     @Override
-    public @NonNull PlayerResource create(@NonNull Integer maxContainerSize, @NonNull Integer maxGroupSize, @NonNull Integer minGroupSize) {
-        return this.playerResourceFactory.create(maxContainerSize, maxGroupSize, minGroupSize);
+    public @NonNull PlayerGroupResource create(final int maxContainerSize, final int minGroupSize) {
+        return this.playerGroupResourceFactory.create(maxContainerSize, minGroupSize);
+    }
+
+    @Override
+    public @NonNull PlayerResource create(final int maxContainerSize) {
+        return this.playerResourceFactory.create(maxContainerSize);
     }
 
 }

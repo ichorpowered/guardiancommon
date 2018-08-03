@@ -23,155 +23,46 @@
  */
 package com.ichorpowered.guardian.common.game.resource;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.ichorpowered.guardian.api.game.GameReference;
 import com.ichorpowered.guardian.api.game.resource.PlayerResource;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class PlayerResourceImpl implements PlayerResource {
 
-    private final Integer maxContainerSize;
-    private final Integer maxGroupSize;
-    private final Integer minGroupSize;
-
-    private int groupIndex = 0;
-    private Multimap<Integer, GameReference<?>> resourceContainer = HashMultimap.create();
-    private Map<String, GameReference<?>> referenceContainer = Maps.newHashMap();
+    private final Map<String, GameReference<?>> referenceContainer = Maps.newHashMap();
+    private final int maxContainerSize;
 
     @Inject
-    public PlayerResourceImpl(final @Assisted("maxContainerSize") Integer maxContainerSize,
-                              final @Assisted("maxGroupSize") Integer maxGroupSize,
-                              final @Assisted("minGroupSize") Integer minGroupSize) {
+    public PlayerResourceImpl(final @Assisted("maxContainerSize") int maxContainerSize) {
         this.maxContainerSize = maxContainerSize;
-        this.maxGroupSize = maxGroupSize;
-        this.minGroupSize = minGroupSize;
     }
 
     @Override
-    public @NonNull PlayerResourceImpl add(GameReference<?> reference) {
-        if (this.resourceContainer.get(this.groupIndex).size() >= this.maxGroupSize && this.groupIndex >= this.maxGroupSize * this.maxContainerSize) throw new StackOverflowError();
-
-        if (!this.resourceContainer.get(this.groupIndex).isEmpty() && this.resourceContainer.get(this.groupIndex).size() < this.maxGroupSize) {
-            this.referenceContainer.put(reference.getGameId(), reference);
-            this.resourceContainer.get(this.groupIndex).add(reference);
-        } else {
-            this.referenceContainer.put(reference.getGameId(), reference);
-            this.resourceContainer.put(this.groupIndex++, reference);
-        }
-
-        return this;
+    public @NonNull GameReference<?> add(@NonNull GameReference<?> reference) {
+        if (this.referenceContainer.size() > this.maxContainerSize) return reference;
+        this.referenceContainer.put(reference.getGameId(), reference);
+        return reference;
     }
 
     @Override
-    public @NonNull PlayerResourceImpl add(GameReference<?>[] references) {
-        if (this.resourceContainer.get(this.groupIndex).size() >= this.maxGroupSize && this.groupIndex >= this.maxGroupSize * this.maxContainerSize) throw new StackOverflowError();
-
-        List<GameReference<?>> buffer = new ArrayList<>();
-        for (GameReference<?> reference : references) {
-            if (buffer.size() < this.maxGroupSize) {
-                buffer.set(buffer.size(), reference);
-            } else {
-                this.resourceContainer.putAll(this.groupIndex++, buffer);
-                buffer.clear();
-            }
-
-            this.referenceContainer.put(reference.getGameId(), reference);
-        }
-
-        return this;
+    public @NonNull Optional<GameReference<?>> remove(@NonNull String referenceId) {
+        return Optional.ofNullable(this.referenceContainer.remove(referenceId));
     }
 
     @Override
-    public @NonNull Collection<GameReference<?>> get(int group) {
-        return this.resourceContainer.get(group);
-    }
-
-    @Override
-    public @NonNull Optional<Integer> get(GameReference<?> reference) {
-        return this.resourceContainer.entries().stream()
-                .filter(entry -> entry.getValue().equals(reference))
-                .map(Map.Entry::getKey)
-                .findFirst();
-    }
-
-    @Override
-    public @NonNull Optional<GameReference<?>> getReference(@NonNull String id) {
-        return Optional.ofNullable(this.referenceContainer.get(id));
-    }
-
-    @Override
-    public @NonNull Collection<Map.Entry<Integer, GameReference<?>>> getAll() {
-        return ImmutableList.copyOf(this.resourceContainer.entries());
-    }
-
-    @Override
-    public @NonNull Boolean remove(GameReference<?> reference) {
-        boolean result = false;
-
-        for (Map.Entry<Integer, GameReference<?>> entry : this.resourceContainer.entries()) {
-            if (!entry.getValue().equals(reference)) continue;
-            result = this.resourceContainer.remove(entry.getKey(), entry.getValue());
-            if (this.resourceContainer.get(entry.getKey()).isEmpty()) this.groupIndex--;
-            break;
-        }
-
-        this.referenceContainer.remove(reference.getGameId());
-
-        return result;
-    }
-
-    @Override
-    public @NonNull Boolean remove(GameReference<?> reference, int group) {
-        this.referenceContainer.remove(reference.getGameId());
-        boolean result = this.resourceContainer.remove(group, reference);
-        if (this.resourceContainer.get(group).isEmpty()) this.groupIndex--;
-        return result;
-    }
-
-    @Override
-    public @NonNull Collection<GameReference<?>> removeAll(int group) {
-        return this.resourceContainer.removeAll(group).stream()
-                .map(gameReference -> this.referenceContainer.remove(gameReference.getGameId()))
-                .collect(Collectors.toList());
+    public @NonNull Optional<GameReference<?>> get(@NonNull String referenceId) {
+        return Optional.ofNullable(this.referenceContainer.get(referenceId));
     }
 
     @Override
     public void clear() {
         this.referenceContainer.clear();
-        this.resourceContainer.clear();
-        this.groupIndex = 0;
-    }
-
-    @Override
-    public @NonNull Integer getContainerSize() {
-        return this.resourceContainer.size();
-    }
-
-    @Override
-    public @NonNull Integer getMaxContainerSize() {
-        return this.maxContainerSize;
-    }
-
-    @Override
-    public @NonNull Integer getMaxGroupSize() {
-        return this.maxGroupSize;
-    }
-
-    @Override
-    public @NonNull Integer getMinGroupSize() {
-        return this.minGroupSize;
     }
 
 }

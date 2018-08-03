@@ -24,8 +24,10 @@
 package com.ichorpowered.guardian.common.inject.game;
 
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.ichorpowered.guardian.api.game.resource.PlayerGroupResource;
 import com.ichorpowered.guardian.api.game.resource.PlayerResource;
 import com.ichorpowered.guardian.api.game.resource.ResourceFactories;
+import com.ichorpowered.guardian.common.game.resource.PlayerGroupResourceImpl;
 import com.ichorpowered.guardian.common.game.resource.PlayerResourceImpl;
 import com.ichorpowered.guardian.common.game.resource.ResourceFactoriesImpl;
 import net.kyori.violet.AbstractModule;
@@ -36,6 +38,7 @@ public final class ResourceModule extends AbstractModule {
     protected void configure() {
         this.bind(ResourceFactories.class).to(ResourceFactoriesImpl.class);
 
+        this.install(new FactoryModuleBuilder().implement(PlayerGroupResource.class, PlayerGroupResourceImpl.class).build(PlayerGroupResource.Factory.class));
         this.install(new FactoryModuleBuilder().implement(PlayerResource.class, PlayerResourceImpl.class).build(PlayerResource.Factory.class));
     }
 
