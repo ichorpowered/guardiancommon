@@ -39,12 +39,12 @@ public class KeyRegistryImpl implements KeyRegistry {
     private final Map<String, Key<?>> valueKeys = Maps.newHashMap();
 
     @Override
-    public @NonNull Optional<Key<?>> get(@NonNull String key) {
+    public @NonNull Optional<Key<?>> get(final @NonNull String key) {
         return Optional.ofNullable(this.valueKeys.get(key));
     }
 
     @Override
-    public @NonNull <E> Optional<Key<E>> get(@NonNull String id, @NonNull TypeToken<E> typeToken) {
+    public @NonNull <E> Optional<Key<E>> get(final @NonNull String id, @NonNull TypeToken<E> typeToken) {
         final Key<?> key = this.valueKeys.get(id);
 
         if (!key.getElementType().equals(typeToken)) return Optional.empty();
@@ -52,7 +52,7 @@ public class KeyRegistryImpl implements KeyRegistry {
     }
 
     @Override
-    public @NonNull KeyRegistry register(@NonNull Key<?> key) {
+    public @NonNull KeyRegistry register(final @NonNull Key<?> key) {
         this.valueKeys.put(key.getKey(), key);
         return this;
     }

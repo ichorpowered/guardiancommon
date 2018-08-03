@@ -30,10 +30,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.ichorpowered.guardian.api.Guardian;
 import com.ichorpowered.guardian.api.game.GameReference;
+import com.ichorpowered.guardian.api.game.model.Component;
 import com.ichorpowered.guardian.api.game.model.Model;
-import com.ichorpowered.guardian.api.game.model.ModelFactories;
 import com.ichorpowered.guardian.api.game.model.ModelRegistry;
-import com.ichorpowered.guardian.api.game.model.component.Component;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -50,13 +49,14 @@ public final class ModelRegistryImpl implements ModelRegistry {
     @Inject private Model.Factory modelFactory;
 
     @Override
-    public <T extends Model> @NonNull T create(final String id, final GameReference<?> gameReference) {
+    public <T extends Model> @NonNull T create(final @NonNull String id, final @NonNull GameReference<?> gameReference) {
         return this.create(id, gameReference, Lists.newArrayList());
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Model> @NonNull T create(final String id, final GameReference<?> gameReference, final List<String> defaultComponents) {
+    public <T extends Model> @NonNull T create(final @NonNull String id, final @NonNull GameReference<?> gameReference,
+                                               final @NonNull List<String> defaultComponents) {
         final List<String> components = Lists.newArrayList();
         try {
             components.addAll(Guardian.getGlobalConfiguration().getModel(id).getNode("components").getList(TypeToken.of(String.class)));
@@ -74,19 +74,19 @@ public final class ModelRegistryImpl implements ModelRegistry {
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull <T extends Model> Optional<T> get(final GameReference<?> gameReference) {
+    public @NonNull <T extends Model> Optional<T> get(final @NonNull GameReference<?> gameReference) {
         return Optional.ofNullable((T) this.modelContainer.get(gameReference.getGameId()));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull <T extends Model> Optional<T> remove(final GameReference<?> gameReference) {
+    public @NonNull <T extends Model> Optional<T> remove(final @NonNull GameReference<?> gameReference) {
         return Optional.ofNullable((T) this.modelContainer.remove(gameReference.getGameId()));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Model> @NonNull T clone(final String id, final GameReference<?> gameReference, final T otherFrame) {
+    public <T extends Model> @NonNull T clone(final @NonNull String id, final @NonNull GameReference<?> gameReference, final @NonNull T otherFrame) {
         T newModel = this.create(id, gameReference,
                 otherFrame.getDefaultComponents()
                         .stream()

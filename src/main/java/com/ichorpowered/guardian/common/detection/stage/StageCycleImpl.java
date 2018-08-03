@@ -61,18 +61,18 @@ public class StageCycleImpl implements StageCycle {
     }
 
     @Override
-    public @NonNull int size() {
+    public int size() {
         if (this.currentStage == null) return 0;
         return this.stages.get(this.stages.indexOf(this.currentStage)).getSize();
     }
 
     @Override
-    public @NonNull int sizeFor(@NonNull Stage<?> stage) {
+    public int sizeFor(final @NonNull Stage<?> stage) {
         return this.stages.get(this.stages.indexOf(stage)).getSize();
     }
 
     @Override
-    public int sizeFor(@NonNull Class<? extends Stage<?>> stage) {
+    public int sizeFor(final @NonNull Class<? extends Stage<?>> stage) {
         return (int) this.stages.stream()
                 .filter(originalStage -> originalStage.getClass().equals(stage))
                 .flatMap(originalStage -> originalStage.getProcesses())
@@ -80,18 +80,18 @@ public class StageCycleImpl implements StageCycle {
     }
 
     @Override
-    public @NonNull int totalSize() {
+    public int totalSize() {
         return this.stages.size();
     }
 
     @Override
-    public @NonNull boolean hasNext() {
+    public boolean hasNext() {
         if (this.stageIterator == null || this.stageProcessIterator == null) return true;
         return this.stageIterator.hasNext() || this.stageProcessIterator.hasNext();
     }
 
     @Override
-    public @NonNull boolean nextStage() {
+    public boolean nextStage() {
         if (this.stageIterator == null) this.stageIterator = this.stages.iterator();
 
         if (this.stageIterator.hasNext()) {
@@ -115,7 +115,7 @@ public class StageCycleImpl implements StageCycle {
     }
 
     @Override
-    public @NonNull boolean next() {
+    public boolean next() {
         if (this.stageIterator == null) this.stageIterator = this.stages.iterator();
 
         if (this.stageProcessIterator != null && this.stageProcessIterator.hasNext()) {

@@ -28,9 +28,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.ichorpowered.guardian.api.game.model.Component;
 import com.ichorpowered.guardian.api.game.model.Model;
 import com.ichorpowered.guardian.api.game.model.ModelFactories;
-import com.ichorpowered.guardian.api.game.model.component.Component;
 import com.ichorpowered.guardian.api.game.model.value.Value;
 import com.ichorpowered.guardian.api.game.model.value.key.Key;
 import com.ichorpowered.guardian.api.game.model.value.key.KeyRegistry;
@@ -74,14 +74,14 @@ public class ComponentImpl implements Component {
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull <E> Optional<Value<E>> get(@NonNull Key<E> key) {
+    public @NonNull <E> Optional<Value<E>> get(final @NonNull Key<E> key) {
         if (!this.valueContainer.containsKey(key)) return this.modelFactories.createValue(this, key).map(value -> (Value<E>) this.valueContainer.put(key, value));
         return Optional.ofNullable((Value<E>) this.valueContainer.get(key));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull <E> Optional<Value<E>> set(@NonNull Key<E> key, E element) {
+    public @NonNull <E> Optional<Value<E>> set(final @NonNull Key<E> key, final @NonNull E element) {
         if (!this.valueContainer.containsKey(key)) return this.modelFactories.createValue(this, key, element).map(value -> (Value<E>) this.valueContainer.put(key, value));
         final Value<E> value = (Value<E>) this.valueContainer.get(key);
 
@@ -90,7 +90,7 @@ public class ComponentImpl implements Component {
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull <E> Optional<Value<E>> remove(@NonNull Key<E> key) {
+    public @NonNull <E> Optional<Value<E>> remove(final @NonNull Key<E> key) {
         return Optional.ofNullable((Value<E>) this.valueContainer.remove(key));
     }
 

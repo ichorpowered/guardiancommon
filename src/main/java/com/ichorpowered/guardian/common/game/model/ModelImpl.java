@@ -29,9 +29,8 @@ import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.ichorpowered.guardian.api.game.GameReference;
+import com.ichorpowered.guardian.api.game.model.Component;
 import com.ichorpowered.guardian.api.game.model.Model;
-import com.ichorpowered.guardian.api.game.model.ModelFactories;
-import com.ichorpowered.guardian.api.game.model.component.Component;
 import com.ichorpowered.guardian.api.game.model.value.Value;
 import com.ichorpowered.guardian.api.game.model.value.key.Key;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -46,7 +45,6 @@ import java.util.stream.Collectors;
 
 public class ModelImpl implements Model {
 
-    private final ModelFactories modelFactories;
     private final Component.Factory componentFactory;
 
     private final String id;
@@ -55,12 +53,10 @@ public class ModelImpl implements Model {
     private final Map<String, Component> componentContainer = Maps.newHashMap();
 
     @Inject
-    public ModelImpl(final ModelFactories modelFactories,
-                     final Component.Factory componentFactory,
+    public ModelImpl(final Component.Factory componentFactory,
                      final @Assisted String id,
                      final @Assisted GameReference<?> gameReference,
                      final @Assisted("defaultComponents") List<String> defaultComponents) {
-        this.modelFactories = modelFactories;
         this.componentFactory = componentFactory;
 
         this.id = id;
@@ -88,35 +84,35 @@ public class ModelImpl implements Model {
     }
 
     @Override
-    public @NonNull <E> List<Value<E>> offer(@NonNull Key<E> key, E element) {
+    public @NonNull <E> List<Value<E>> offer(final @NonNull Key<E> key, E element) {
         final List<Value<E>> values = new ArrayList<>();
         this.componentContainer.values().forEach(component -> component.set(key, element).ifPresent(values::add));
         return values;
     }
 
     @Override
-    public @NonNull <E> List<Value<E>> offer(@NonNull Set<String> components, @NonNull Key<E> key, E element) {
+    public @NonNull <E> List<Value<E>> offer(final @NonNull Set<String> components, final @NonNull Key<E> key, E element) {
         final List<Value<E>> values = new ArrayList<>();
         components.forEach(componentKey -> this.componentContainer.get(componentKey).set(key, element).ifPresent(values::add));
         return values;
     }
 
     @Override
-    public @NonNull <E> List<Value<E>> request(@NonNull Key<E> key) {
+    public @NonNull <E> List<Value<E>> request(final @NonNull Key<E> key) {
         final List<Value<E>> values = new ArrayList<>();
         this.componentContainer.values().forEach(component -> component.get(key).ifPresent(values::add));
         return values;
     }
 
     @Override
-    public @NonNull <E> List<Value<E>> request(@NonNull Set<String> components, @NonNull Key<E> key) {
+    public @NonNull <E> List<Value<E>> request(final @NonNull Set<String> components, final @NonNull Key<E> key) {
         final List<Value<E>> values = new ArrayList<>();
         components.forEach(componentKey -> this.componentContainer.get(componentKey).get(key).ifPresent(values::add));
         return values;
     }
 
     @Override
-    public @NonNull <E> Optional<Value<E>> requestFirst(@NonNull Key<E> key) {
+    public @NonNull <E> Optional<Value<E>> requestFirst(final @NonNull Key<E> key) {
         return this.componentContainer.values().stream()
                 .map(component -> component.get(key).orElse(null))
                 .filter(Objects::nonNull)
@@ -124,18 +120,13 @@ public class ModelImpl implements Model {
     }
 
     @Override
-    public @NonNull <E> Optional<Value<E>> requestFirst(@NonNull String component, @NonNull Key<E> key) {
+    public @NonNull <E> Optional<Value<E>> requestFirst(final @NonNull String component, final @NonNull Key<E> key) {
         return this.componentContainer.get(component).get(key);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull Component createComponent(@NonNull String id) {
-        return this.createComponent(id, Lists.newArrayList());
-    }
-
-    @Override
-    public @NonNull Component createComponent(@NonNull String id, final List<String> defaultValues) {
+    public @NonNull Component createComponent(final @NonNull String id) {
         final Component component = this.componentFactory.create(id, this);
         this.componentContainer.put(id, component);
 
@@ -144,13 +135,13 @@ public class ModelImpl implements Model {
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull Optional<Component> getComponent(@NonNull String id) {
+    public @NonNull Optional<Component> getComponent(final @NonNull String id) {
         return Optional.ofNullable(this.componentContainer.get(id));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull Optional<Component> cloneComponent(@NonNull String id, @NonNull Component component) {
+    public @NonNull Component cloneComponent(final @NonNull String id, final @NonNull Component component) {
         Component newComponent = this.createComponent(id);
 
         component.keys().stream()
@@ -159,12 +150,12 @@ public class ModelImpl implements Model {
                 .map(Optional::get)
                 .forEach(value -> newComponent.set((Key<Object>) value.getKey(), value.get()));
 
-        return Optional.ofNullable(newComponent);
+        return newComponent;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull Optional<Component> removeComponent(@NonNull String id) {
+    public @NonNull Optional<Component> removeComponent(final @NonNull String id) {
         return Optional.ofNullable(this.componentContainer.remove(id));
     }
 

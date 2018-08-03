@@ -47,22 +47,22 @@ public class DetectionControllerImpl implements DetectionController {
     }
 
     @Override
-    public @NonNull DetectionBuilder builder(@NonNull String detectionId) {
+    public @NonNull DetectionBuilder builder(final @NonNull String detectionId) {
         return this.detectionBuilderFactory.create(this, detectionId);
     }
 
     @Override
-    public @NonNull Optional<Detection> getDetection(@NonNull String detectionId) {
+    public @NonNull Optional<Detection> getDetection(final @NonNull String detectionId) {
         return Optional.ofNullable(this.detectionContainer.get(detectionId));
     }
 
     @Override
-    public @NonNull DetectionController removeDetection(@NonNull String detectionId) {
+    public @NonNull DetectionController removeDetection(final @NonNull String detectionId) {
         this.detectionContainer.remove(detectionId);
         return this;
     }
 
-    void setDetection(@NonNull Detection detection) {
+    void setDetection(final @NonNull Detection detection) {
         this.detectionContainer.put(detection.getId(), detection);
     }
 

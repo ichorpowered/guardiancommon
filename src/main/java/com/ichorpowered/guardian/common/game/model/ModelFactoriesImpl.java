@@ -26,8 +26,8 @@ package com.ichorpowered.guardian.common.game.model;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.ichorpowered.guardian.api.Guardian;
+import com.ichorpowered.guardian.api.game.model.Component;
 import com.ichorpowered.guardian.api.game.model.ModelFactories;
-import com.ichorpowered.guardian.api.game.model.component.Component;
 import com.ichorpowered.guardian.api.game.model.value.Value;
 import com.ichorpowered.guardian.api.game.model.value.key.Key;
 import com.ichorpowered.guardian.api.game.model.value.store.Stores;
@@ -44,7 +44,7 @@ public final class ModelFactoriesImpl implements ModelFactories {
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull <E> Optional<Value<E>> createValue(@NonNull Component component, @NonNull Key<E> key) {
+    public @NonNull <E> Optional<Value<E>> createValue(final @NonNull Component component, final @NonNull Key<E> key) {
         if (key.getValueStore().equals(Stores.PHYSICAL)) {
             E value = null;
 
@@ -61,7 +61,7 @@ public final class ModelFactoriesImpl implements ModelFactories {
     }
 
     @Override
-    public @NonNull <E> Optional<Value<E>> createValue(@NonNull Component component, @NonNull Key<E> key, @NonNull E element) {
+    public @NonNull <E> Optional<Value<E>> createValue(final @NonNull Component component, final @NonNull Key<E> key, final @NonNull E element) {
         if (key.getValueStore().equals(Stores.PHYSICAL)) {
             return this.createValue(component, key).map(value -> value.set(element));
         }

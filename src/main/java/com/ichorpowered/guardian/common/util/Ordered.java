@@ -31,16 +31,16 @@ public class Ordered<E> {
 
     private E element;
 
-    public Ordered(long index) {
+    public Ordered(final long index) {
         this(index, null);
     }
 
-    public Ordered(long index, E element) {
+    public Ordered(final long index, final E element) {
         this.index = index;
         this.element = element;
     }
 
-    public Ordered<E> next(E element) {
+    public Ordered<E> next(final E element) {
         return new Ordered<>(this.index + 1, element);
     }
 
@@ -60,7 +60,7 @@ public class Ordered<E> {
         return this.element;
     }
 
-    public void setElement(E element) {
+    public void setElement(final E element) {
         this.element = element;
     }
 

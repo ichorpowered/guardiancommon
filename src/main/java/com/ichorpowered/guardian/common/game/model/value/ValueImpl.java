@@ -25,7 +25,6 @@ package com.ichorpowered.guardian.common.game.model.value;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.ichorpowered.guardian.api.game.model.ModelFactories;
 import com.ichorpowered.guardian.api.game.model.value.Value;
 import com.ichorpowered.guardian.api.game.model.value.key.Key;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -35,17 +34,14 @@ import java.util.function.Function;
 
 public class ValueImpl<E> implements Value<E> {
 
-    private final ModelFactories modelFactories;
     private final Key<E> key;
     private final E defaultElement;
 
     private E element;
 
     @Inject
-    private ValueImpl(final ModelFactories modelFactories,
-                      final @Assisted("key") Key key,
+    private ValueImpl(final @Assisted("key") Key key,
                       final @Assisted("defaultElement") Object defaultElement) {
-        this.modelFactories = modelFactories;
         this.key = (Key<E>) key;
         this.defaultElement = (E) defaultElement;
     }
@@ -56,12 +52,12 @@ public class ValueImpl<E> implements Value<E> {
     }
 
     @Override
-    public E get() {
+    public @NonNull E get() {
         return this.element == null ? this.defaultElement : this.element;
     }
 
     @Override
-    public E getDefault() {
+    public @NonNull E getDefault() {
         return this.defaultElement;
     }
 
@@ -71,20 +67,20 @@ public class ValueImpl<E> implements Value<E> {
     }
 
     @Override
-    public @NonNull boolean isEmpty() {
-        return this.element == null;
-    }
-
-    @Override
-    public @NonNull Value<E> set(@NonNull E value) {
+    public @NonNull Value<E> set(final @NonNull E value) {
         this.element = value;
         return this;
     }
 
     @Override
-    public @NonNull Value<E> transform(@NonNull Function<E, E> function) {
+    public @NonNull Value<E> transform(final @NonNull Function<E, E> function) {
         this.element = function.apply(this.get());
         return this;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.element == null;
     }
 
 }

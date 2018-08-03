@@ -43,13 +43,13 @@ public class PenaltyStageImpl implements Stage<Penalty> {
 
     @Inject
     public PenaltyStageImpl(final List<StageProcess> processes,
-                              final int maximum) {
+                            final int maximum) {
         processes.forEach(stageProcess -> this.processes.put((Class<Penalty>) stageProcess.getClass(), (Penalty) stageProcess));
         this.maximum = maximum;
     }
 
     @Override
-    public @NonNull Optional<Penalty> getProcess(@NonNull Class<? extends Penalty> stageProcessType) {
+    public @NonNull Optional<Penalty> getProcess(final @NonNull Class<? extends Penalty> stageProcessType) {
         return Optional.ofNullable(this.processes.get(stageProcessType));
     }
 
@@ -59,12 +59,12 @@ public class PenaltyStageImpl implements Stage<Penalty> {
     }
 
     @Override
-    public @NonNull int getMaximum() {
+    public int getMaximum() {
         return this.maximum;
     }
 
     @Override
-    public @NonNull int getSize() {
+    public int getSize() {
         return this.processes.size();
     }
 

@@ -24,10 +24,10 @@
 package com.ichorpowered.guardian.common.inject.game;
 
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.ichorpowered.guardian.api.game.model.Component;
 import com.ichorpowered.guardian.api.game.model.Model;
 import com.ichorpowered.guardian.api.game.model.ModelFactories;
 import com.ichorpowered.guardian.api.game.model.ModelRegistry;
-import com.ichorpowered.guardian.api.game.model.component.Component;
 import com.ichorpowered.guardian.api.game.model.value.Value;
 import com.ichorpowered.guardian.api.game.model.value.key.Key;
 import com.ichorpowered.guardian.api.game.model.value.key.KeyRegistry;

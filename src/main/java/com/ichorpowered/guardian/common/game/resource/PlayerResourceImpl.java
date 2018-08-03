@@ -44,19 +44,19 @@ public class PlayerResourceImpl implements PlayerResource {
     }
 
     @Override
-    public @NonNull GameReference<?> add(@NonNull GameReference<?> reference) {
+    public @NonNull GameReference<?> add(final @NonNull GameReference<?> reference) {
         if (this.referenceContainer.size() > this.maxContainerSize) return reference;
         this.referenceContainer.put(reference.getGameId(), reference);
         return reference;
     }
 
     @Override
-    public @NonNull Optional<GameReference<?>> remove(@NonNull String referenceId) {
+    public @NonNull Optional<GameReference<?>> remove(final @NonNull String referenceId) {
         return Optional.ofNullable(this.referenceContainer.remove(referenceId));
     }
 
     @Override
-    public @NonNull Optional<GameReference<?>> get(@NonNull String referenceId) {
+    public @NonNull Optional<GameReference<?>> get(final @NonNull String referenceId) {
         return Optional.ofNullable(this.referenceContainer.get(referenceId));
     }
 

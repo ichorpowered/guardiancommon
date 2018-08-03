@@ -62,18 +62,18 @@ public class DetectionBuilderImpl implements DetectionBuilder {
 
 
     @Override
-    public @NonNull StageBuilder stage(@NonNull Class<? extends Stage<?>> stageType) {
+    public @NonNull StageBuilder stage(final @NonNull Class<? extends Stage<?>> stageType) {
         return this.stageBuilderFactory.create(this, stageType);
     }
 
     @Override
-    public @NonNull DetectionBuilder stage(@NonNull Stage<?> stage) {
+    public @NonNull DetectionBuilder stage(final @NonNull Stage<?> stage) {
         this.stages.add(stage);
         return this;
     }
 
     @Override
-    public @NonNull DetectionController register(@NonNull String name, @NonNull Object plugin) {
+    public @NonNull DetectionController register(final @NonNull String name, final @NonNull Object plugin) {
         final StageCycle stageCycle = this.stageCycleFactory.create(this.stages);
 
         this.detectionController.setDetection(this.detectionFactory.create(this.detectionId, name, stageCycle, plugin));

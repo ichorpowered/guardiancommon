@@ -28,6 +28,7 @@ import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.ichorpowered.guardian.api.detection.stage.StageProcess;
 import net.kyori.violet.AbstractModule;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,7 +50,7 @@ public class StageReferenceModule extends AbstractModule {
 
     @Provides
     @Inject
-    public List<StageProcess> getStageProcesses(final Injector injector) {
+    public List<StageProcess> getStageProcesses(final @NonNull Injector injector) {
         return this.processes.stream().map(injector::getInstance).collect(Collectors.toList());
     }
 

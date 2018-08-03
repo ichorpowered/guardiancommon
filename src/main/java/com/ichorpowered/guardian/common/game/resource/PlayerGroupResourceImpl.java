@@ -59,7 +59,7 @@ public class PlayerGroupResourceImpl implements PlayerGroupResource {
     }
 
     @Override
-    public @NonNull PlayerGroupResource add(@NonNull GameReference<?> gameReference) {
+    public @NonNull PlayerGroupResource add(final @NonNull GameReference<?> gameReference) {
         final int containerSize = this.groupContainer.keySet().size();
         final int totalSize = this.groupContainer.size();
 
@@ -84,7 +84,7 @@ public class PlayerGroupResourceImpl implements PlayerGroupResource {
     }
 
     @Override
-    public @NonNull PlayerGroupResource add(@NonNull GameReference<?>... gameReferences) {
+    public @NonNull PlayerGroupResource add(final @NonNull GameReference<?>... gameReferences) {
         for (GameReference<?> reference : gameReferences) {
             this.add(reference);
         }
@@ -93,7 +93,7 @@ public class PlayerGroupResourceImpl implements PlayerGroupResource {
     }
 
     @Override
-    public @NonNull Optional<Map.Entry<Integer, GameReference<?>>> remove(@NonNull GameReference<?> gameReference) {
+    public @NonNull Optional<Map.Entry<Integer, GameReference<?>>> remove(final @NonNull GameReference<?> gameReference) {
         final Optional<Map.Entry<Integer, GameReference<?>>> result = this.groupContainer.entries().stream()
                 .filter(entry -> entry.getValue().equals(gameReference))
                 .findFirst();
@@ -103,19 +103,19 @@ public class PlayerGroupResourceImpl implements PlayerGroupResource {
     }
 
     @Override
-    public @NonNull Collection<GameReference<?>> removeGroup(int group) {
+    public @NonNull Collection<GameReference<?>> removeGroup(final int group) {
         return this.groupContainer.removeAll(group);
     }
 
     @Override
-    public @NonNull Optional<Map.Entry<Integer, GameReference<?>>> get(@NonNull GameReference<?> gameReference) {
+    public @NonNull Optional<Map.Entry<Integer, GameReference<?>>> get(final @NonNull GameReference<?> gameReference) {
         return this.groupContainer.entries().stream()
                 .filter(entry -> entry.getValue().equals(gameReference))
                 .findFirst();
     }
 
     @Override
-    public @NonNull Collection<GameReference<?>> getGroup(int group) {
+    public @NonNull Collection<GameReference<?>> getGroup(final int group) {
         return this.groupContainer.get(group);
     }
 

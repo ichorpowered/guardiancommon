@@ -42,19 +42,17 @@ public class GameReferenceImpl<T> implements GameReference<T> {
                              final Class<T> valueClass,
                              final Function<String, T> valueFunction) {
         this.gameId = id;
-
         this.valueFunction = valueFunction;
-
         this.gameClass = valueClass;
     }
 
     @Override
-    public T get() {
+    public @NonNull T get() {
         return this.valueFunction.apply(this.gameId);
     }
 
     @Override
-    public Function<String, T> getFunction() {
+    public @NonNull Function<String, T> getFunction() {
         return this.valueFunction;
     }
 

@@ -25,9 +25,9 @@ package com.ichorpowered.guardian.common.detection.stage.type;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
-import com.ichorpowered.guardian.api.detection.stage.process.Heuristic;
 import com.ichorpowered.guardian.api.detection.stage.Stage;
 import com.ichorpowered.guardian.api.detection.stage.StageProcess;
+import com.ichorpowered.guardian.api.detection.stage.process.Heuristic;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Iterator;
@@ -49,7 +49,7 @@ public class HeuristicStageImpl implements Stage<Heuristic> {
     }
 
     @Override
-    public @NonNull Optional<Heuristic> getProcess(@NonNull Class<? extends Heuristic> stageProcessType) {
+    public @NonNull Optional<Heuristic> getProcess(final @NonNull Class<? extends Heuristic> stageProcessType) {
         return Optional.ofNullable(this.processes.get(stageProcessType));
     }
 
@@ -59,12 +59,12 @@ public class HeuristicStageImpl implements Stage<Heuristic> {
     }
 
     @Override
-    public @NonNull int getMaximum() {
+    public int getMaximum() {
         return this.maximum;
     }
 
     @Override
-    public @NonNull int getSize() {
+    public int getSize() {
         return this.processes.size();
     }
 

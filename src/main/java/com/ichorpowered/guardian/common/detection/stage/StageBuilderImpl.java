@@ -51,13 +51,13 @@ public class StageBuilderImpl implements StageBuilder {
     }
 
     @Override
-    public @NonNull <T extends StageProcess> StageBuilder add(@NonNull Class<T> stageClass) {
+    public @NonNull <T extends StageProcess> StageBuilder add(final @NonNull Class<T> stageClass) {
         this.processes.add(stageClass);
         return this;
     }
 
     @Override
-    public @NonNull StageBuilder max(@NonNull int maximum) {
+    public @NonNull StageBuilder max(final int maximum) {
         this.maximum = maximum;
         return this;
     }
