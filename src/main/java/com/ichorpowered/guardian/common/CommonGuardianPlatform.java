@@ -23,8 +23,6 @@
  */
 package com.ichorpowered.guardian.common;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import com.ichorpowered.guardian.api.GuardianPlatform;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -36,12 +34,11 @@ public final class CommonGuardianPlatform implements GuardianPlatform {
     private final String version;
     private final String releaseCandidate;
 
-    @Inject
-    public CommonGuardianPlatform(final @Named("platformName") String platformName,
-                                  final @Named("platformVersion") String platformVersion,
-                                  final @Named("gameVersion") String gameVersion,
-                                  final @Named("version") String version,
-                                  final @Named("releaseCandidate") String releaseCandidate) {
+    public CommonGuardianPlatform(final String platformName,
+                                  final String platformVersion,
+                                  final String gameVersion,
+                                  final String version,
+                                  final String releaseCandidate) {
         this.platformName = platformName;
         this.platformVersion = platformVersion;
         this.gameVersion = gameVersion;
