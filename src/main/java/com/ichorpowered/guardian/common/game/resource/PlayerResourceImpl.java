@@ -36,16 +36,12 @@ import java.util.Optional;
 public class PlayerResourceImpl implements PlayerResource {
 
     private final Map<String, GameReference<?>> referenceContainer = Maps.newHashMap();
-    private final int maxContainerSize;
 
     @Inject
-    public PlayerResourceImpl(final @Assisted("maxContainerSize") int maxContainerSize) {
-        this.maxContainerSize = maxContainerSize;
-    }
+    public PlayerResourceImpl() {}
 
     @Override
     public @NonNull GameReference<?> add(final @NonNull GameReference<?> reference) {
-        if (this.referenceContainer.size() > this.maxContainerSize) return reference;
         this.referenceContainer.put(reference.getGameId(), reference);
         return reference;
     }

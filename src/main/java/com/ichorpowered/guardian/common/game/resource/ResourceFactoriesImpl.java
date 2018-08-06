@@ -49,8 +49,8 @@ public final class ResourceFactoriesImpl implements ResourceFactories {
     }
 
     @Override
-    public @NonNull PlayerResource create(final int maxContainerSize) {
-        return this.playerResourceFactory.create(maxContainerSize);
+    public @NonNull PlayerResource create() {
+        return this.playerResourceFactory.create();
     }
 
 }
