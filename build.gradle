@@ -22,7 +22,7 @@ apply from: project("$gradle.guardianApiName").file("gradle/versions.gradle")
 defaultTasks 'licenseFormat', 'build'
 
 group = 'com.ichorpowered.guardian'
-version = '1.0.0-1'
+version = '1.0.0-2-SNAPSHOT'
 
 apply from: project("$gradle.guardianApiName").file("gradle/shared.gradle")
 
