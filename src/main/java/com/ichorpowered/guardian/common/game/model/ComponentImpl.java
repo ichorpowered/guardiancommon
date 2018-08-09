@@ -31,9 +31,9 @@ import com.google.inject.assistedinject.Assisted;
 import com.ichorpowered.guardian.api.game.model.Component;
 import com.ichorpowered.guardian.api.game.model.Model;
 import com.ichorpowered.guardian.api.game.model.ModelFactories;
-import com.ichorpowered.guardian.api.game.model.value.Value;
-import com.ichorpowered.guardian.api.game.model.value.key.Key;
-import com.ichorpowered.guardian.api.game.model.value.key.KeyRegistry;
+import com.ichorpowered.guardian.api.game.model.value.GameValue;
+import com.ichorpowered.guardian.api.game.model.value.key.GameKey;
+import com.ichorpowered.guardian.api.game.model.value.key.GameKeyRegistry;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
@@ -43,20 +43,20 @@ import java.util.Optional;
 public class ComponentImpl implements Component {
 
     private final ModelFactories modelFactories;
-    private final KeyRegistry keyRegistry;
+    private final GameKeyRegistry gameKeyRegistry;
 
     private final String id;
     private final Model model;
     private final List<String> defaultKeys = Lists.newArrayList();
-    private final Map<Key<?>, Value<?>> valueContainer = Maps.newHashMap();
+    private final Map<GameKey<?>, GameValue<?>> valueContainer = Maps.newHashMap();
 
     @Inject
     public ComponentImpl(final ModelFactories modelFactories,
-                         final KeyRegistry keyRegistry,
+                         final GameKeyRegistry gameKeyRegistry,
                          final @Assisted String id,
                          final @Assisted Model model) {
         this.modelFactories = modelFactories;
-        this.keyRegistry = keyRegistry;
+        this.gameKeyRegistry = gameKeyRegistry;
 
         this.id = id;
         this.model = model;
@@ -74,24 +74,24 @@ public class ComponentImpl implements Component {
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull <E> Optional<Value<E>> get(final @NonNull Key<E> key) {
-        if (!this.valueContainer.containsKey(key)) return this.modelFactories.createValue(this, key).map(value -> (Value<E>) this.valueContainer.put(key, value));
-        return Optional.ofNullable((Value<E>) this.valueContainer.get(key));
+    public @NonNull <E> Optional<GameValue<E>> get(final @NonNull GameKey<E> gameKey) {
+        if (!this.valueContainer.containsKey(gameKey)) return this.modelFactories.createValue(this, gameKey).map(value -> (GameValue<E>) this.valueContainer.put(gameKey, value));
+        return Optional.ofNullable((GameValue<E>) this.valueContainer.get(gameKey));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull <E> Optional<Value<E>> set(final @NonNull Key<E> key, final @NonNull E element) {
-        if (!this.valueContainer.containsKey(key)) return this.modelFactories.createValue(this, key, element).map(value -> (Value<E>) this.valueContainer.put(key, value));
-        final Value<E> value = (Value<E>) this.valueContainer.get(key);
+    public @NonNull <E> Optional<GameValue<E>> set(final @NonNull GameKey<E> gameKey, final @NonNull E element) {
+        if (!this.valueContainer.containsKey(gameKey)) return this.modelFactories.createValue(this, gameKey, element).map(value -> (GameValue<E>) this.valueContainer.put(gameKey, value));
+        final GameValue<E> gameValue = (GameValue<E>) this.valueContainer.get(gameKey);
 
-        return Optional.of(value.set(element));
+        return Optional.of(gameValue.set(element));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NonNull <E> Optional<Value<E>> remove(final @NonNull Key<E> key) {
-        return Optional.ofNullable((Value<E>) this.valueContainer.remove(key));
+    public @NonNull <E> Optional<GameValue<E>> remove(final @NonNull GameKey<E> gameKey) {
+        return Optional.ofNullable((GameValue<E>) this.valueContainer.remove(gameKey));
     }
 
     @Override
@@ -100,7 +100,7 @@ public class ComponentImpl implements Component {
     }
 
     @Override
-    public @NonNull ImmutableList<Key<?>> keys() {
+    public @NonNull ImmutableList<GameKey<?>> keys() {
         return ImmutableList.copyOf(this.valueContainer.keySet());
     }
 

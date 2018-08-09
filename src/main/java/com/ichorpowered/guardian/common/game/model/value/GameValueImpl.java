@@ -25,30 +25,30 @@ package com.ichorpowered.guardian.common.game.model.value;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.ichorpowered.guardian.api.game.model.value.Value;
-import com.ichorpowered.guardian.api.game.model.value.key.Key;
+import com.ichorpowered.guardian.api.game.model.value.GameValue;
+import com.ichorpowered.guardian.api.game.model.value.key.GameKey;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Optional;
 import java.util.function.Function;
 
-public class ValueImpl<E> implements Value<E> {
+public class GameValueImpl<E> implements GameValue<E> {
 
-    private final Key<E> key;
+    private final GameKey<E> gameKey;
     private final E defaultElement;
 
     private E element;
 
     @Inject
-    private ValueImpl(final @Assisted("key") Key key,
-                      final @Assisted("defaultElement") Object defaultElement) {
-        this.key = (Key<E>) key;
+    private GameValueImpl(final @Assisted("gameKey") GameKey gameKey,
+                          final @Assisted("defaultElement") Object defaultElement) {
+        this.gameKey = (GameKey<E>) gameKey;
         this.defaultElement = (E) defaultElement;
     }
 
     @Override
-    public @NonNull Key<E> getKey() {
-        return this.key;
+    public @NonNull GameKey<E> getGameKey() {
+        return this.gameKey;
     }
 
     @Override
@@ -67,13 +67,13 @@ public class ValueImpl<E> implements Value<E> {
     }
 
     @Override
-    public @NonNull Value<E> set(final @NonNull E value) {
+    public @NonNull GameValue<E> set(final @NonNull E value) {
         this.element = value;
         return this;
     }
 
     @Override
-    public @NonNull Value<E> transform(final @NonNull Function<E, E> function) {
+    public @NonNull GameValue<E> transform(final @NonNull Function<E, E> function) {
         this.element = function.apply(this.get());
         return this;
     }

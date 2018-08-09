@@ -31,8 +31,8 @@ import com.google.inject.assistedinject.Assisted;
 import com.ichorpowered.guardian.api.game.GameReference;
 import com.ichorpowered.guardian.api.game.model.Component;
 import com.ichorpowered.guardian.api.game.model.Model;
-import com.ichorpowered.guardian.api.game.model.value.Value;
-import com.ichorpowered.guardian.api.game.model.value.key.Key;
+import com.ichorpowered.guardian.api.game.model.value.GameValue;
+import com.ichorpowered.guardian.api.game.model.value.key.GameKey;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.ArrayList;
@@ -84,44 +84,44 @@ public class ModelImpl implements Model {
     }
 
     @Override
-    public @NonNull <E> List<Value<E>> offer(final @NonNull Key<E> key, E element) {
-        final List<Value<E>> values = new ArrayList<>();
-        this.componentContainer.values().forEach(component -> component.set(key, element).ifPresent(values::add));
-        return values;
+    public @NonNull <E> List<GameValue<E>> offer(final @NonNull GameKey<E> gameKey, E element) {
+        final List<GameValue<E>> gameValues = new ArrayList<>();
+        this.componentContainer.values().forEach(component -> component.set(gameKey, element).ifPresent(gameValues::add));
+        return gameValues;
     }
 
     @Override
-    public @NonNull <E> List<Value<E>> offer(final @NonNull Set<String> components, final @NonNull Key<E> key, E element) {
-        final List<Value<E>> values = new ArrayList<>();
-        components.forEach(componentKey -> this.componentContainer.get(componentKey).set(key, element).ifPresent(values::add));
-        return values;
+    public @NonNull <E> List<GameValue<E>> offer(final @NonNull Set<String> components, final @NonNull GameKey<E> gameKey, E element) {
+        final List<GameValue<E>> gameValues = new ArrayList<>();
+        components.forEach(componentKey -> this.componentContainer.get(componentKey).set(gameKey, element).ifPresent(gameValues::add));
+        return gameValues;
     }
 
     @Override
-    public @NonNull <E> List<Value<E>> request(final @NonNull Key<E> key) {
-        final List<Value<E>> values = new ArrayList<>();
-        this.componentContainer.values().forEach(component -> component.get(key).ifPresent(values::add));
-        return values;
+    public @NonNull <E> List<GameValue<E>> request(final @NonNull GameKey<E> gameKey) {
+        final List<GameValue<E>> gameValues = new ArrayList<>();
+        this.componentContainer.values().forEach(component -> component.get(gameKey).ifPresent(gameValues::add));
+        return gameValues;
     }
 
     @Override
-    public @NonNull <E> List<Value<E>> request(final @NonNull Set<String> components, final @NonNull Key<E> key) {
-        final List<Value<E>> values = new ArrayList<>();
-        components.forEach(componentKey -> this.componentContainer.get(componentKey).get(key).ifPresent(values::add));
-        return values;
+    public @NonNull <E> List<GameValue<E>> request(final @NonNull Set<String> components, final @NonNull GameKey<E> gameKey) {
+        final List<GameValue<E>> gameValues = new ArrayList<>();
+        components.forEach(componentKey -> this.componentContainer.get(componentKey).get(gameKey).ifPresent(gameValues::add));
+        return gameValues;
     }
 
     @Override
-    public @NonNull <E> Optional<Value<E>> requestFirst(final @NonNull Key<E> key) {
+    public @NonNull <E> Optional<GameValue<E>> requestFirst(final @NonNull GameKey<E> gameKey) {
         return this.componentContainer.values().stream()
-                .map(component -> component.get(key).orElse(null))
+                .map(component -> component.get(gameKey).orElse(null))
                 .filter(Objects::nonNull)
                 .findFirst();
     }
 
     @Override
-    public @NonNull <E> Optional<Value<E>> requestFirst(final @NonNull String component, final @NonNull Key<E> key) {
-        return this.componentContainer.get(component).get(key);
+    public @NonNull <E> Optional<GameValue<E>> requestFirst(final @NonNull String component, final @NonNull GameKey<E> gameKey) {
+        return this.componentContainer.get(component).get(gameKey);
     }
 
     @SuppressWarnings("unchecked")
@@ -148,7 +148,7 @@ public class ModelImpl implements Model {
                 .map(component::get)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .forEach(value -> newComponent.set((Key<Object>) value.getKey(), value.get()));
+                .forEach(value -> newComponent.set((GameKey<Object>) value.getGameKey(), value.get()));
 
         return newComponent;
     }

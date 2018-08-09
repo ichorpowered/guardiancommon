@@ -26,34 +26,34 @@ package com.ichorpowered.guardian.common.game.model.value.key;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Singleton;
-import com.ichorpowered.guardian.api.game.model.value.key.Key;
-import com.ichorpowered.guardian.api.game.model.value.key.KeyRegistry;
+import com.ichorpowered.guardian.api.game.model.value.key.GameKey;
+import com.ichorpowered.guardian.api.game.model.value.key.GameKeyRegistry;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Map;
 import java.util.Optional;
 
 @Singleton
-public class KeyRegistryImpl implements KeyRegistry {
+public class GameKeyRegistryImpl implements GameKeyRegistry {
 
-    private final Map<String, Key<?>> valueKeys = Maps.newHashMap();
+    private final Map<String, GameKey<?>> valueKeys = Maps.newHashMap();
 
     @Override
-    public @NonNull Optional<Key<?>> get(final @NonNull String key) {
+    public @NonNull Optional<GameKey<?>> get(final @NonNull String key) {
         return Optional.ofNullable(this.valueKeys.get(key));
     }
 
     @Override
-    public @NonNull <E> Optional<Key<E>> get(final @NonNull String id, @NonNull TypeToken<E> typeToken) {
-        final Key<?> key = this.valueKeys.get(id);
+    public @NonNull <E> Optional<GameKey<E>> get(final @NonNull String id, @NonNull TypeToken<E> typeToken) {
+        final GameKey<?> gameKey = this.valueKeys.get(id);
 
-        if (!key.getElementType().equals(typeToken)) return Optional.empty();
-        return Optional.ofNullable((Key<E>) key);
+        if (!gameKey.getElementType().equals(typeToken)) return Optional.empty();
+        return Optional.ofNullable((GameKey<E>) gameKey);
     }
 
     @Override
-    public @NonNull KeyRegistry register(final @NonNull Key<?> key) {
-        this.valueKeys.put(key.getKey(), key);
+    public @NonNull GameKeyRegistry register(final @NonNull GameKey<?> gameKey) {
+        this.valueKeys.put(gameKey.getKey(), gameKey);
         return this;
     }
 

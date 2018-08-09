@@ -28,16 +28,16 @@ import com.ichorpowered.guardian.api.game.model.Component;
 import com.ichorpowered.guardian.api.game.model.Model;
 import com.ichorpowered.guardian.api.game.model.ModelFactories;
 import com.ichorpowered.guardian.api.game.model.ModelRegistry;
-import com.ichorpowered.guardian.api.game.model.value.Value;
-import com.ichorpowered.guardian.api.game.model.value.key.Key;
-import com.ichorpowered.guardian.api.game.model.value.key.KeyRegistry;
+import com.ichorpowered.guardian.api.game.model.value.GameValue;
+import com.ichorpowered.guardian.api.game.model.value.key.GameKey;
+import com.ichorpowered.guardian.api.game.model.value.key.GameKeyRegistry;
 import com.ichorpowered.guardian.common.game.model.ComponentImpl;
 import com.ichorpowered.guardian.common.game.model.ModelFactoriesImpl;
 import com.ichorpowered.guardian.common.game.model.ModelImpl;
 import com.ichorpowered.guardian.common.game.model.ModelRegistryImpl;
-import com.ichorpowered.guardian.common.game.model.value.ValueImpl;
-import com.ichorpowered.guardian.common.game.model.value.key.KeyImpl;
-import com.ichorpowered.guardian.common.game.model.value.key.KeyRegistryImpl;
+import com.ichorpowered.guardian.common.game.model.value.GameValueImpl;
+import com.ichorpowered.guardian.common.game.model.value.key.GameKeyImpl;
+import com.ichorpowered.guardian.common.game.model.value.key.GameKeyRegistryImpl;
 import net.kyori.violet.AbstractModule;
 
 public final class ModelModule extends AbstractModule {
@@ -46,12 +46,12 @@ public final class ModelModule extends AbstractModule {
     protected void configure() {
         this.bind(ModelFactories.class).to(ModelFactoriesImpl.class);
         this.bind(ModelRegistry.class).to(ModelRegistryImpl.class);
-        this.bind(KeyRegistry.class).to(KeyRegistryImpl.class);
+        this.bind(GameKeyRegistry.class).to(GameKeyRegistryImpl.class);
 
         this.install(new FactoryModuleBuilder().implement(Model.class, ModelImpl.class).build(Model.Factory.class));
         this.install(new FactoryModuleBuilder().implement(Component.class, ComponentImpl.class).build(Component.Factory.class));
-        this.install(new FactoryModuleBuilder().implement(Key.class, KeyImpl.class).build(Key.Factory.class));
-        this.install(new FactoryModuleBuilder().implement(Value.class, ValueImpl.class).build(Value.Factory.class));
+        this.install(new FactoryModuleBuilder().implement(GameKey.class, GameKeyImpl.class).build(GameKey.Factory.class));
+        this.install(new FactoryModuleBuilder().implement(GameValue.class, GameValueImpl.class).build(GameValue.Factory.class));
     }
 
 }
