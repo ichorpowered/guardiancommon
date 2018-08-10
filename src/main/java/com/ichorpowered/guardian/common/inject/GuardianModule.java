@@ -32,8 +32,6 @@ import com.ichorpowered.guardian.common.inject.game.ModelModule;
 import com.ichorpowered.guardian.common.inject.game.ResourceModule;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-
 public class GuardianModule extends PrivateModule {
 
     private final GuardianPlatform platform;
@@ -43,7 +41,6 @@ public class GuardianModule extends PrivateModule {
     }
 
     @Override
-    @OverridingMethodsMustInvokeSuper
     protected void configure() {
         this.bindAndExpose(GuardianPlatform.class).toInstance(this.platform);
 
