@@ -1,28 +1,42 @@
-license {
-    header = file('LICENSE.txt')
-    include '**/*.java'
+ext.api = common.project('guardianapi')
 
-    ignoreFailures = false
-    strictCheck = true
+evaluationDependsOn api.path
 
-    mapping {
-        java = 'SLASHSTAR_STYLE'
-    }
+apply from: api.file('gradle/guardian.gradle')
+
+compileJava {
+    options.compilerArgs += '-Xlint:-processing'
 }
 
-jar {
+task devJar(type: Jar) {
     classifier = 'dev'
+    duplicatesStrategy = 'exclude' // Exclude duplicate LICENSE.txt file
+
+    // Inherit manifest from jar
+    manifest.from jar.manifest
+
+    // Include classes
+    from sourceSets.main.output
+
+    // Include API
+    from api.sourceSets.main.output
 }
 
-shadowJar {
-    classifier = ''
+task sourceJar(type: Jar, overwrite: true) {
+    classifier = 'sources'
 
-    dependencies {
-        include(project("${gradle.guardianApiName}"))
-    }
+    // Include sources
+    from sourceSets.main.allSource
+
+    // Include API sources in source jar
+    from api.sourceSets.main.allSource
 }
 
 artifacts {
-    archives jar
-    archives shadowJar
+    archives sourceJar
+    archives devJar
+}
+
+license {
+    ext.name = 'Guardian'
 }

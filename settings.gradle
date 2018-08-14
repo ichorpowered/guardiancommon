@@ -1,4 +1,3 @@
-rootProject.name = 'guardiancommon'
+rootProject.name = name
 
 include 'guardianapi'
-gradle.ext.guardianApiName = ':guardianapi'

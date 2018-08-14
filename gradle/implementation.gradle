@@ -1,0 +1,52 @@
+ext.common = project(':guardiancommon')
+
+evaluationDependsOn common.path
+
+apply from: common.file('gradle/common.gradle')
+
+ext.apiSuffix = (api.version - '-SNAPSHOT') + '-BETA'
+
+dependencies {
+    compile common
+}
+
+jar {
+    classifier = 'base'
+}
+
+// Apply shadow plugin to include the dependencies in the JAR
+apply plugin: 'com.github.johnrengelman.shadow'
+
+shadowJar {
+    classifier = ''
+}
+
+shadowJar ext.shadowConfiguration = {
+    dependencies {
+        include project(api.path)
+        include project(common.path)
+        include dependency('org.fusesource.jansi:jansi')
+        include dependency('org.checkerframework:checker-qual')
+        include dependency('net.kyori:violet')
+        include dependency('com.google.inject.extensions:guice-assistedinject')
+        include dependency('com.google.inject.extensions:guice-multibindings')
+    }
+
+    exclude 'LICENSE', 'NOTICE'
+}
+
+artifacts {
+    archives shadowJar
+}
+
+sourceJar {
+    // Include Common sources
+    from common.sourceSets.main.allSource
+}
+
+devJar {
+    // Include Common
+    from common.sourceSets.main.output
+}
+
+ext.shadedDevProject = common
