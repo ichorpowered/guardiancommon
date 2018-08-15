@@ -39,13 +39,10 @@ import java.util.stream.Stream;
 public class HeuristicStageImpl implements Stage<Heuristic> {
 
     private final Map<Class<? extends Heuristic>, Heuristic> processes = Maps.newHashMap();
-    private final int maximum;
 
     @Inject
-    public HeuristicStageImpl(final List<StageProcess> processes,
-                              final int maximum) {
+    public HeuristicStageImpl(final List<StageProcess> processes) {
         processes.forEach(stageProcess -> this.processes.put((Class<Heuristic>) stageProcess.getClass(), (Heuristic) stageProcess));
-        this.maximum = maximum;
     }
 
     @Override
@@ -56,11 +53,6 @@ public class HeuristicStageImpl implements Stage<Heuristic> {
     @Override
     public @NonNull Stream<Heuristic> getProcesses() {
         return this.processes.values().stream();
-    }
-
-    @Override
-    public int getMaximum() {
-        return this.maximum;
     }
 
     @Override

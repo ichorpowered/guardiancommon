@@ -39,13 +39,10 @@ import java.util.stream.Stream;
 public class CheckStageImpl implements Stage<Check<?>> {
 
     private final Map<Class<? extends Check<?>>, Check<?>> processes = Maps.newHashMap();
-    private final int maximum;
 
     @Inject
-    public CheckStageImpl(final List<StageProcess> processes,
-                          final int maximum) {
+    public CheckStageImpl(final List<StageProcess> processes) {
         processes.forEach(stageProcess -> this.processes.put((Class<Check<?>>) stageProcess.getClass(), (Check<?>) stageProcess));
-        this.maximum = maximum;
     }
 
     @Override
@@ -56,11 +53,6 @@ public class CheckStageImpl implements Stage<Check<?>> {
     @Override
     public @NonNull Stream<Check<?>> getProcesses() {
         return this.processes.values().stream();
-    }
-
-    @Override
-    public int getMaximum() {
-        return this.maximum;
     }
 
     @Override

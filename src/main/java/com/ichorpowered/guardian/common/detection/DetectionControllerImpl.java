@@ -47,8 +47,8 @@ public class DetectionControllerImpl implements DetectionController {
     }
 
     @Override
-    public @NonNull DetectionBuilder builder(final @NonNull String detectionId) {
-        return this.detectionBuilderFactory.create(this, detectionId);
+    public @NonNull DetectionBuilder builder() {
+        return this.detectionBuilderFactory.create();
     }
 
     @Override

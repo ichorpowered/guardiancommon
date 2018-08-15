@@ -24,15 +24,18 @@
 package com.ichorpowered.guardian.common.detection;
 
 import com.google.common.collect.Lists;
+import com.google.inject.Guice;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.assistedinject.Assisted;
 import com.ichorpowered.guardian.api.detection.Detection;
 import com.ichorpowered.guardian.api.detection.DetectionBuilder;
 import com.ichorpowered.guardian.api.detection.DetectionController;
+import com.ichorpowered.guardian.api.detection.DetectionProvider;
 import com.ichorpowered.guardian.api.detection.stage.Stage;
-import com.ichorpowered.guardian.api.detection.stage.StageBuilder;
 import com.ichorpowered.guardian.api.detection.stage.StageCycle;
-import com.ichorpowered.guardian.common.detection.stage.StageBuilderImpl;
+import com.ichorpowered.guardian.api.detection.stage.StageProcess;
+import com.ichorpowered.guardian.common.inject.detection.StageReferenceModule;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
@@ -41,50 +44,42 @@ public class DetectionBuilderImpl implements DetectionBuilder {
 
     private final StageCycle.Factory stageCycleFactory;
     private final Detection.Factory detectionFactory;
-    private final StageBuilderImpl.Factory stageBuilderFactory;
     private final DetectionControllerImpl detectionController;
-    private final String detectionId;
 
     private final List<Stage<?>> stages = Lists.newArrayList();
 
     @Inject
     public DetectionBuilderImpl(final StageCycle.Factory stageCycleFactory,
                                 final Detection.Factory detectionFactory,
-                                final StageBuilderImpl.Factory stageBuilderFactory,
-                                final @Assisted DetectionController detectionController,
-                                final @Assisted String detectionId) {
+                                final DetectionController detectionController) {
         this.stageCycleFactory = stageCycleFactory;
         this.detectionFactory = detectionFactory;
-        this.stageBuilderFactory = stageBuilderFactory;
         this.detectionController = (DetectionControllerImpl) detectionController;
-        this.detectionId = detectionId;
     }
 
-
+    @SafeVarargs
     @Override
-    public @NonNull StageBuilder stage(final @NonNull Class<? extends Stage<?>> stageType) {
-        return this.stageBuilderFactory.create(this, stageType);
-    }
-
-    @Override
-    public @NonNull DetectionBuilder stage(final @NonNull Stage<?> stage) {
-        this.stages.add(stage);
+    public @NonNull final <E extends StageProcess, T extends Stage<E>> DetectionBuilder stage(final @NonNull Class<T> stageType, final @NonNull Class<? extends E>... stageProcesses) {
+        this.stages.add(Guice.createInjector(new StageReferenceModule(Lists.newArrayList(stageProcesses))).getInstance(stageType));
         return this;
     }
 
     @Override
-    public @NonNull DetectionController register(final @NonNull String name, final @NonNull Object plugin) {
+    public @NonNull DetectionController register(final @NonNull DetectionProvider detectionProvider, final @NonNull Object plugin) {
         final StageCycle stageCycle = this.stageCycleFactory.create(this.stages);
 
-        this.detectionController.setDetection(this.detectionFactory.create(this.detectionId, name, stageCycle, plugin));
+        final Detection detection = this.detectionFactory.create(detectionProvider.getId(), detectionProvider.getName(), stageCycle, plugin);
+
+        detectionProvider.setProvider(detection);
+
+        this.detectionController.setDetection(detection);
         return this.detectionController;
     }
 
     // Implementation Factory
     public interface Factory {
 
-        @NonNull DetectionBuilder create(@NonNull @Assisted DetectionController detectionController,
-                                         @NonNull @Assisted String detectionId);
+        @NonNull DetectionBuilder create();
 
     }
 

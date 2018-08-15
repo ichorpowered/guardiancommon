@@ -36,17 +36,13 @@ import java.util.stream.Collectors;
 public class StageReferenceModule extends AbstractModule {
 
     private final List<Class<? extends StageProcess>> processes;
-    private final int maximum;
 
-    public StageReferenceModule(final List<Class<? extends StageProcess>> processes, final int maximum) {
+    public StageReferenceModule(final List<Class<? extends StageProcess>> processes) {
         this.processes = processes;
-        this.maximum = maximum;
     }
 
     @Override
-    public void configure() {
-        this.bind(Integer.class).toInstance(this.maximum);
-    }
+    protected void configure() {}
 
     @Provides
     @Inject

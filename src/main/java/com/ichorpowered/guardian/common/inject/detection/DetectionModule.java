@@ -27,12 +27,10 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.ichorpowered.guardian.api.detection.Detection;
 import com.ichorpowered.guardian.api.detection.DetectionBuilder;
 import com.ichorpowered.guardian.api.detection.DetectionController;
-import com.ichorpowered.guardian.api.detection.stage.StageBuilder;
 import com.ichorpowered.guardian.api.detection.stage.StageCycle;
 import com.ichorpowered.guardian.common.detection.DetectionBuilderImpl;
 import com.ichorpowered.guardian.common.detection.DetectionControllerImpl;
 import com.ichorpowered.guardian.common.detection.DetectionImpl;
-import com.ichorpowered.guardian.common.detection.stage.StageBuilderImpl;
 import com.ichorpowered.guardian.common.detection.stage.StageCycleImpl;
 import net.kyori.violet.AbstractModule;
 
@@ -44,7 +42,6 @@ public class DetectionModule extends AbstractModule {
 
         this.install(new FactoryModuleBuilder().implement(Detection.class, DetectionImpl.class).build(Detection.Factory.class));
         this.install(new FactoryModuleBuilder().implement(DetectionBuilder.class, DetectionBuilderImpl.class).build(DetectionBuilderImpl.Factory.class));
-        this.install(new FactoryModuleBuilder().implement(StageBuilder.class, StageBuilderImpl.class).build(StageBuilderImpl.Factory.class));
 
         this.install(new FactoryModuleBuilder().implement(StageCycle.class, StageCycleImpl.class).build(StageCycle.Factory.class));
     }
