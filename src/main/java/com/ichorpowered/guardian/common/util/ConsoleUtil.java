@@ -43,62 +43,51 @@ public final class ConsoleUtil {
         return builder().add(message, replace).build();
     }
 
-    public static String of(final Ansi.Color color, final String message, final String... replace) {
-        return builder(color).add(message, replace).buildAndGet();
+    public static String of(final Ansi.Color color, final boolean bright, final String message, final String... replace) {
+        return builder(color, bright).add(message, replace).buildAndGet();
     }
 
-    public static ConsoleUtil append(final Ansi.Color color, final String message, final String... replace) {
-        return builder(color).add(message, replace).build();
-    }
-
-    public static String warn(final String message, final String... replace) {
-        return builder(Ansi.Color.YELLOW).withHeader(Ansi.Color.YELLOW, "WARNING").add(Ansi.Color.YELLOW, message, replace).build().message;
-    }
-
-    public static String error(final String message, final String... replace) {
-        return builder(Ansi.Color.RED).withHeader(Ansi.Color.RED, "ERROR").add(Ansi.Color.RED, message, replace).build().message;
+    public static ConsoleUtil append(final Ansi.Color color, final boolean bright, final String message, final String... replace) {
+        return builder(color, bright).add(message, replace).build();
     }
 
     public static Builder builder() {
-        return builder(Ansi.Color.WHITE);
+        return builder(Ansi.Color.WHITE, true);
     }
 
-    public static Builder builder(final Ansi.Color color) {
-        return new Builder(color);
+    public static Builder builder(final Ansi.Color color, final boolean bright) {
+        return new Builder(color, bright);
     }
 
     public static class Builder {
 
         private final Ansi.Color def;
-        private String header = "";
+        private final boolean bright;
+
         private String message = "";
 
-        private Builder(final Ansi.Color def) {
+        private Builder(final Ansi.Color def, boolean bright) {
             this.def = def;
-        }
-
-        public Builder withHeader(final Ansi.Color color, final String header) {
-            this.header = Ansi.ansi().fg(color).bold().a("** " + header + " ** ").reset().toString();
-            return this;
+            this.bright = bright;
         }
 
         public Builder add(final String message, final String... replace) {
-            this.message += Ansi.ansi().fg(this.def).boldOff().a(arrayFormat(message, replace).getMessage()).reset().toString();
+            final Ansi ansi = Ansi.ansi();
+
+            if (this.bright) ansi.reset().fg(this.def).bold();
+            else ansi.fg(this.def).boldOff();
+
+            this.message += ansi.a(arrayFormat(message, replace).getMessage()).reset().toString();
             return this;
         }
 
         public Builder add(final Ansi.Color color, final String message, final String... replace) {
-            this.message += Ansi.ansi().fg(color).boldOff().a(arrayFormat(message, replace).getMessage()).reset().toString();
-            return this;
-        }
+            final Ansi ansi = Ansi.ansi();
 
-        public Builder addBold(final String message, final String... replace) {
-            this.message += Ansi.ansi().fg(this.def).bold().a(arrayFormat(message, replace).getMessage()).reset().toString();
-            return this;
-        }
+            if (this.bright) ansi.reset().fg(color).bold();
+            else ansi.fg(color).boldOff();
 
-        public Builder addBold(final Ansi.Color color, final String message, final String... replace) {
-            this.message += Ansi.ansi().fg(color).bold().a(arrayFormat(message, replace).getMessage()).reset().toString();
+            this.message += ansi.a(arrayFormat(message, replace).getMessage()).reset().toString();
             return this;
         }
 
