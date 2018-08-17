@@ -26,7 +26,6 @@ shadowJar ext.shadowConfiguration = {
         include project(api.path)
         include project(common.path)
         include dependency('org.fusesource.jansi:jansi')
-        include dependency('org.checkerframework:checker-qual')
         include dependency('net.kyori:violet')
         include dependency('com.google.inject.extensions:guice-assistedinject')
         include dependency('com.google.inject.extensions:guice-multibindings')
