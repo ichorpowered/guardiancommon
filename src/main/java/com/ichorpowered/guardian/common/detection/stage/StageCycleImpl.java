@@ -111,6 +111,7 @@ public class StageCycleImpl implements StageCycle {
             }
         }
 
+        this.reset();
         return false;
     }
 
@@ -134,6 +135,7 @@ public class StageCycleImpl implements StageCycle {
             return this.next();
         }
 
+        this.reset();
         return false;
     }
 
@@ -143,6 +145,14 @@ public class StageCycleImpl implements StageCycle {
                 .filter(originalStage -> originalStage.getClass().equals(stage))
                 .flatMap(originalStage -> originalStage.getProcesses())
                 .collect(Collectors.toList());
+    }
+
+    private void reset() {
+        this.stageIterator = null;
+        this.stageProcessIterator = null;
+
+        this.currentStage = null;
+        this.currentStageProcess = null;
     }
 
 }
