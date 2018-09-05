@@ -1,11 +1,11 @@
 <h1 align="center">
   <img src="https://forums-cdn.spongepowered.org/uploads/default/original/3X/f/9/f97c66af122e9aed4ef7387b59460778234bd690.png" width="620">
 </h1>
-<p align="center">**Common Implementation**</p>
+<p align="center"><b>Common Implementation</b></p>
 <p align="center">The Common code-base for the extensible AntiCheat plugin.</p>
 
 <p align="center">
-  <a href="https://travis-ci.org/ichorpowered/guardiancommon"><img alt="Build Status" src="https://travis-ci.org/ichorpowered/guardiancommon.svg?branch=bleeding"></a>
+  <a href="https://travis-ci.org/ichorpowered/guardiancommon"><img alt="Build Status" src="https://travis-ci.org/ichorpowered/guardiancommon.svg?branch=master"></a>
   <a href="https://discord.gg/V2PFPkn"><img alt="Join Discord" src="https://img.shields.io/badge/Join-Discord-blue.svg?style=flat-round"></a>
 </p>
 
