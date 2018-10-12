@@ -13,8 +13,7 @@ buildscript {
 ext.common = project
 apply from: 'gradle/common.gradle'
 
-version = api.version
-ext.apiVersion = version
+ext.apiVersion = api.version
 
 dependencies {
     compile api
